@@ -1,0 +1,212 @@
+import firebase_admin
+from firebase_admin import credentials, firestore
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+cred = credentials.Certificate("the-chase-data-firebase-adminsdk-fbsvc-df2ae5424f.json")
+firebase_admin.initialize_app(cred)
+db = firestore.client()
+
+rows = []
+contestant_list = []
+final_chase_data = db.collection("final_chase_data").stream()
+
+teams = db.collection("contestant_data").stream()
+for team in teams:
+    contestant_list.append(team.to_dict())
+
+contestant_list_df = pd.DataFrame(contestant_list)
+
+print(final_chase_data)
+for i in final_chase_data:
+    rows.append(i.to_dict())
+print(rows)
+final_chase_df = pd.DataFrame(rows)
+print(final_chase_df.head())
+print(final_chase_df.columns)
+
+final_chase_df["season"] = final_chase_df["season"].astype(int)
+final_chase_df["episode"] = final_chase_df["episode"].astype(int)
+
+
+print(final_chase_df["episode"].unique())
+
+print(final_chase_df[final_chase_df["episode"] == 113])
+
+final_chase_sorted = final_chase_df.sort_values(
+    by=["season", "episode", "time_left"],
+    ascending=[True, True, False]
+)
+
+grouped_chase = final_chase_sorted.groupby(["season", "episode"])
+
+grouped_chase.get_group((12, 137))
+
+
+final_chase_sorted["previous event"] = final_chase_sorted.groupby(["season", "episode", "target"])["event"].shift(1)
+
+made_it_cols = [
+    "contestant1 made it",
+    "contestant2 made it",
+    "contestant3 made it",
+    "contestant4 made it",
+]
+contestant_counts = contestant_list_df.copy()
+
+contestant_counts["num_made_it"] = (
+    contestant_counts[made_it_cols]
+    .eq("true")
+    .sum(axis=1)
+)
+
+contestant_counts["season"] = contestant_counts["season"].astype(int)
+contestant_counts["episode"] = contestant_counts["episode"].astype(int)
+
+
+contestant_counts = contestant_counts[
+    ["season", "episode", "num_made_it"]
+]
+
+episodes_more_than_one = contestant_counts[
+    contestant_counts["num_made_it"] >0
+]
+
+final_chase_filtered = final_chase_sorted.merge(
+    episodes_more_than_one,
+    on=["season", "episode"],
+    how="inner"
+)
+
+final_chase_sorted = final_chase_filtered
+
+print(final_chase_sorted[final_chase_sorted["episode"] == 108].sort_values(by=["target", "time_left"], ascending =[True, False]))
+
+correct_after_wrong = final_chase_sorted[((final_chase_sorted["event"] == "correct chaser") & (final_chase_sorted["previous event"] == "incorrect chaser"))]
+wrong_after_right = final_chase_sorted[((final_chase_sorted["event"] == "incorrect chaser") & (final_chase_sorted["previous event"] == "correct chaser"))]
+correct_after_right = final_chase_sorted[((final_chase_sorted["event"] == "correct chaser") & (final_chase_sorted["previous event"] == "correct chaser"))]
+wrong_after_wrong = final_chase_sorted[((final_chase_sorted["event"] == "incorrect chaser") & (final_chase_sorted["previous event"] == "incorrect chaser"))]
+
+correct_after_wrong = final_chase_sorted[((final_chase_sorted["event"] == "correct") & (final_chase_sorted["previous event"] == "incorrect"))]
+wrong_after_right = final_chase_sorted[((final_chase_sorted["event"] == "incorrect") & (final_chase_sorted["previous event"] == "correct"))]
+correct_after_right = final_chase_sorted[((final_chase_sorted["event"] == "correct") & (final_chase_sorted["previous event"] == "correct"))]
+wrong_after_wrong = final_chase_sorted[((final_chase_sorted["event"] == "incorrect") & (final_chase_sorted["previous event"] == "incorrect"))]
+
+
+length_right = len(final_chase_sorted[final_chase_sorted["event"] == "correct"])
+length_wrong = len(final_chase_sorted[final_chase_sorted["event"] == "incorrect"])
+
+
+print((100/(len(wrong_after_wrong) + len(correct_after_wrong))) * len(wrong_after_wrong))
+print((100/(len(wrong_after_wrong) + len(correct_after_wrong)))* len(correct_after_wrong))
+print((100/(len(wrong_after_right) + len(correct_after_right))) * len(correct_after_right))
+print(100/(length_right+length_wrong) * length_right)
+
+print((100/(len(correct_after_wrong) + len(wrong_after_wrong)))* len(wrong_after_wrong))
+print((100/(len(wrong_after_right) + len(correct_after_right))) * len(wrong_after_right))
+
+#print(len(correct_after_right) / length_wrong)
+print(length_right, length_wrong)
+
+print(len(contestant_list_df))
+
+
+
+final_chase_sorted["time_left"] = final_chase_sorted["time_left"].round().astype(int)
+
+times = final_chase_sorted[final_chase_sorted["target"] == 0]["time_left"].dropna()
+
+plt.figure()
+plt.hist(times, bins=range(times.min(), times.max() + 2), density=True)
+plt.xlabel("Time left (seconds)")
+plt.ylabel("Proportion of observations")
+plt.title("Distribution of Time Left")
+plt.show()
+
+
+print("correct_after_right:", len(correct_after_right))
+print("wrong_after_right:", len(wrong_after_right))
+print("correct_after_wrong:", len(correct_after_wrong))
+print("wrong_after_wrong:", len(wrong_after_wrong))
+
+
+ct_gender_offer = pd.crosstab(contestant_list_df["contestant4 gender"], contestant_list_df["contestant4 offer taken"])
+ct_proportion = ct_gender_offer.div(ct_gender_offer.sum(axis=1), axis=0)
+
+plt.figure()
+ct_proportion.plot(kind="bar")
+plt.xlabel("Gender")
+plt.ylabel("offer taken by gender")
+plt.tight_layout()
+plt.show()
+
+
+ages = pd.concat([
+    contestant_list_df["contestant1 age"],
+    contestant_list_df["contestant2 age"],
+    contestant_list_df["contestant3 age"],
+    contestant_list_df["contestant4 age"]
+], ignore_index=True)
+
+cash = pd.concat([
+    contestant_list_df["contestant1 cash builder"],
+    contestant_list_df["contestant2 cash builder"],
+    contestant_list_df["contestant3 cash builder"],
+    contestant_list_df["contestant4 cash builder"]
+], ignore_index=True)
+
+df_age_cash = pd.DataFrame({
+    "age": ages,
+    "cash_builder": cash
+}).dropna()
+
+df_age_cash["age"] = pd.to_numeric(df_age_cash["age"], errors="coerce")
+df_age_cash["cash_builder"] = pd.to_numeric(df_age_cash["cash_builder"], errors="coerce")
+
+age = df_age_cash["age"].to_numpy()
+cash_builder = df_age_cash["cash_builder"].to_numpy()
+
+print(age.shape, cash_builder.shape)
+
+m, b = np.polyfit(age, cash_builder, 1)
+
+plt.figure()
+plt.scatter(age, cash_builder)
+x_line = np.linspace(age.min(), age.max(), 100)
+y_line = m * x_line + b
+plt.plot(x_line, y_line)
+
+plt.tight_layout()
+plt.show()
+
+cash_builders_combined = (
+    int(contestant_list["cash_builder_1"]) * contestant_list["madeithome_1"]
+    + contestant_list["cash_builder_2"] * contestant_list["madeithome_2"]
+    + contestant_list["cash_builder_3"] * contestant_list["madeithome_3"]
+    + contestant_list["cash_builder_4"] * contestant_list["madeithome_4"]
+)
+print(cash_builders_combined)
+
+combined_cash_builders = contestant_list_df["contestant1 cash builder"] + contestant_list_df["contestant2 cash builder"] + contestant_list_df["contestant3 cash builder"]
+
+final_chase_just_team = final_chase_sorted[final_chase_sorted["target"] == 0] 
+targets = final_chase_sorted.groupby(
+    ["season", "episode"])["target"].max().reset_index(name="target")
+
+
+questions_answered = final_chase_just_team.groupby(
+    ["season", "episode"]).size().reset_index(name="questions_answered")
+
+questions_answered = questions_answered.merge(
+    targets,
+    on=["season", "episode"],
+    how="left"
+)
+
+
+plt.figure()
+plt.scatter(questions_answered["questions_answered"], questions_answered["target"])
+x_line = np.linspace(questions_answered["target"].min(), questions_answered["target"].max(), 30)
+plt.plot(x_line)
+plt.show()
+
