@@ -17,13 +17,10 @@ How do cashbuilders and number of contestants in the final chase impact likeliho
 Collecting the data
 
 <img width="610" height="816" alt="chase data collection image" src="https://github.com/user-attachments/assets/0a5c3047-0a43-4a25-886d-1061ef50c5de" />
-<br
-  
-  >
+<div style="margin-bottom: 20px;"></div>
 
 <img width="742" height="208" alt="final chase data image" src="https://github.com/user-attachments/assets/09426430-367c-40c7-8f69-9231e4cb7c95" />
-<br
+<div style="margin-bottom: 20px;"></div>
   
-  >
 
 <img width="1122" height="316" alt="contestant data image" src="https://github.com/user-attachments/assets/9fe9d324-92b8-4833-b23b-45b894f2234f" />
