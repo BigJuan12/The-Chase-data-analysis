@@ -37,5 +37,5 @@ The average age of a contestant is 43 years old
 
 The average target the teams set is 16.8
 
-<img src="<img width="599" height="480" alt="Offer taken by gender" src="https://github.com/user-attachments/assets/72349518-e634-4970-bf36-bd50810fc964">
+<img width="599" height="480" alt="Offer taken by gender" src="https://github.com/user-attachments/assets/72349518-e634-4970-bf36-bd50810fc964" />
 
