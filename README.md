@@ -41,10 +41,12 @@ The average target the teams set is 16.8
 
 <img width="599" height="480" alt="Offer taken by gender" src="https://github.com/user-attachments/assets/72349518-e634-4970-bf36-bd50810fc964" />
 
-offer taken	high	low	middle
-gender			
-female	0.116751	0.086294	0.796954
-male	0.118227	0.064039	0.817734
+| Metric | Value |
+|------|-------|
+| Mean cash builder | £X |
+| % reaching Final Chase | Y% |
+| Mean Final Chase target | Z |
+
 
 
 Originally I thought that males would be more inclined to take risks and therefore have higher rates of taking the high offer however this bar chart shows little difference.  
