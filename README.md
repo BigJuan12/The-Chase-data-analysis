@@ -37,5 +37,5 @@ The average age of a contestant is 43 years old
 
 The average target the teams set is 16.8
 
-![Uploading Offer taken by gender.png…]()
+<img src="<img src="https://github.com/BigJuan12/The-Chase-data-analysis/blob/main/The%20chase%20gameplay%20image.webp">">
 
