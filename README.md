@@ -1,4 +1,4 @@
-## The Chase data analysis
+# The Chase data analysis
 
 <img src="https://github.com/BigJuan12/The-Chase-data-analysis/blob/main/The%20chase%20gameplay%20image.webp">
 
@@ -7,7 +7,7 @@ The Chase is a Brittish quiz show where 4 contestants work together to beat a ch
 
 
 
-# Questions
+## Questions
 Some of the questions I want to answer with this analysis:
 Does gender and age influence the likelihood of a contestant taking the various offers. For example are male and younger contestants more likely to risk it and take the high offer.
 Does gender and age influence the ammount of money a contestant is expected to accumulate in their cash builder. For example, older contestants may do better as they have lived longer and gained more knowledge.
@@ -16,7 +16,7 @@ Do teams answer questions evenly in the final chase. For example do teams typica
 Create a model to predict target based on contestants who made it through and their cash builders.
 How do cashbuilders and number of contestants in the final chase impact likelihood of pushing the chaser back.
 
-Collecting the data
+## Collecting the data
 
 <img width="610" height="816" alt="chase data collection image" src="https://github.com/user-attachments/assets/0a5c3047-0a43-4a25-886d-1061ef50c5de" />
 <div style="margin-bottom: 20px;"></div>
@@ -28,3 +28,10 @@ Collecting the data
 <img width="1122" height="316" alt="contestant data image" src="https://github.com/user-attachments/assets/9fe9d324-92b8-4833-b23b-45b894f2234f" />
 
 ## Interesting facts
+
+The average cash builder is $4803
+The average age of a contestant is 43 years old 
+59.5% of contestants made it through to the final chase
+The average target the teams set is 16.8
+
+![Uploading image.png…]()
