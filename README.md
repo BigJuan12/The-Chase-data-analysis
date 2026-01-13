@@ -33,8 +33,9 @@ The average cash builder is $4803
   
 The average age of a contestant is 43 years old   
 
-59.5% of contestants made it through to the final chase  
+59.5% of contestants make it through to the final chase  
 
 The average target the teams set is 16.8
 
-![Uploading image.png…]()
+![Uploading Offer taken by gender.png…]()
+
