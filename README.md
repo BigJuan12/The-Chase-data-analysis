@@ -104,7 +104,7 @@ p (incorrect) = 0.38
 p (correct|previous correct) = 0.56  
 p (correct|previous incorrect) = 0.66  
 
-Running a chi square test gives the p value 0.000012, an incredibly small value showing that there is definetly a relationship. This means we can reject the Ha in favour of Ho and we can confidently say that the result of the previous answer does have an effect on the probability of getting the next question correct. It seems counter intuitive that a correct answer is more likely if the previous answer was incorrect. A possible explanation for this could be that they purposely alternate between difficult and easy questions. If I had more time, I could answer this could be answered by testing the same questions on others to see if the same pattern emmerges.
+Running a chi square test gives the p value 0.000012, an incredibly small value showing that there is definetly a relationship. This means we can reject the Ha in favour of Ho and we can confidently say that the result of the previous answer does have an effect on the probability of getting the next question correct. It seems counter intuitive that a correct answer is more likely if the previous answer was incorrect. A possible explanation for this could be that they purposely alternate between difficult and easy questions. If I had more time, this could be answered by testing the same questions on others to see if the same pattern emmerges.
 
 ## Momentum on a larger scale
 
@@ -115,6 +115,7 @@ The chasers and the host often comment on a teams course over the final chase. T
 | 0–40              | 471             |
 | 40–80             | 415             |
 | 80–120            | 478             |
+
 
 
 
