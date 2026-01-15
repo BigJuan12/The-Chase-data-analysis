@@ -8,7 +8,6 @@ The Chase is a Brittish quiz show where 4 contestants work together to beat a ch
 
 
 ## Questions
-Some of the questions I want to answer with this analysis:  
 
 Does gender and age influence the likelihood of a contestant taking the various offers. For example are male and younger contestants more likely to risk it and take the high offer.  
 
@@ -22,8 +21,29 @@ Create a model to predict target based on contestants who made it through and th
 
 How do cashbuilders and number of contestants in the final chase impact likelihood of pushing the chaser back.
 
+## Overview of the data
+
+The dataset contains data on 100 episodes of The Chase. The data is stored within 2 datasets, final_chase_data and contestant_data. each record in final_chase_data is an event from the final chase, either a correct answer, incorrect answer or pushback. More details are stored such as the time left on the clock, the contestant, and the current total.
+
+### Example record from final_chase_df
+
+| chaser              | contestant          | current_total | episode | event           | season | target | time_left        |
+|---------------------|---------------------|---------------|---------|-----------------|--------|--------|------------------|
+| the dark destroyer  | the dark destroyer  | 11            | 131     | correct chaser  | 12     | 16     | 4.571048974990845 |
+
+The contestant_data dataset contains data on each contestant within an episode including age, gender, cash builder and whether the contestant made it through to the final chase or not.
+
+### Example record from contestant_data
+
+| chaser           | contestant1 | contestant1_age | contestant1_cash_builder | contestant1_gender | contestant1_made_it | contestant1_offer_taken | contestant2  | contestant2_age | contestant2_cash_builder | contestant2_gender | contestant2_made_it | contestant2_offer_taken | contestant3 | contestant3_age | contestant3_cash_builder | contestant3_gender | contestant3_made_it | contestant3_offer_taken | contestant4  | contestant4_age | contestant4_cash_builder | contestant4_gender | contestant4_made_it | contestant4_offer_taken | episode | season | database_location |
+|------------------|-------------|-----------------|--------------------------|--------------------|---------------------|--------------------------|-------------|----------------|--------------------------|--------------------|---------------------|--------------------------|------------|----------------|--------------------------|--------------------|---------------------|--------------------------|-------------|----------------|--------------------------|--------------------|---------------------|--------------------------|--------|--------|-------------------|
+| the sinnerman    | Ash         | 35              | 2000                     | male               | true                | middle                   | Gianluca     | 26             | 4000                     | male               | true                | middle                   | Sally      | 54             | 6000                     | female             | false               | middle                   | Katherine   | 41             | 4000                     | female             | true                | middle                   | 125    | 12     | nam5              |
+
+
+
 ## Collecting the data
 
+The process of collecting the data was extensive.
 <img width="310" height="416" alt="chase data collection image" src="https://github.com/user-attachments/assets/0a5c3047-0a43-4a25-886d-1061ef50c5de" />
 <div style="margin-bottom: 20px;"></div>
 
@@ -89,5 +109,7 @@ p (incorrect) = 0.38
 p (correct|previous correct) = 0.56  
 p (correct|previous incorrect) = 0.66  
 
-Running a chi square test gives the p value 0.000012, an incredibly small value showing that there is definetly a relationship. This means we can reject the Ha in favour of Ho and we can confidently say that the result of the previous answer does have an effect on the probability of getting the next question correct. It seems counter intuitive that a correct answer is more likely if the previous answer was incorrect. A possible explanation for this could be that they purposely alternate between difficult and easy questions. This could be answered by testing the same questions on others to see if 
+Running a chi square test gives the p value 0.000012, an incredibly small value showing that there is definetly a relationship. This means we can reject the Ha in favour of Ho and we can confidently say that the result of the previous answer does have an effect on the probability of getting the next question correct. It seems counter intuitive that a correct answer is more likely if the previous answer was incorrect. A possible explanation for this could be that they purposely alternate between difficult and easy questions. This could be answered by testing the same questions on others to see if the same pattern emmerges.
+
+
 
