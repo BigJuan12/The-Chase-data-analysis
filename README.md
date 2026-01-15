@@ -43,15 +43,10 @@ The contestant_data dataset contains data on each contestant within an episode i
 
 ## Collecting the data
 
-The process of collecting the data was extensive.
+The process of collecting the data was extensive. There was no existing dataset that had the data I needed so I had to manually enter the data. Setting up a button system with contestants and answers enabled me to speed up the process. Using google firebase, I was able to automatically create a record from each click.
+
 <img width="310" height="416" alt="chase data collection image" src="https://github.com/user-attachments/assets/0a5c3047-0a43-4a25-886d-1061ef50c5de" />
-<div style="margin-bottom: 20px;"></div>
 
-<img width="742" height="208" alt="final chase data image" src="https://github.com/user-attachments/assets/09426430-367c-40c7-8f69-9231e4cb7c95" />
-<div style="margin-bottom: 20px;"></div>
-  
-
-<img width="1122" height="316" alt="contestant data image" src="https://github.com/user-attachments/assets/9fe9d324-92b8-4833-b23b-45b894f2234f" />
 
 ## Interesting facts
 
