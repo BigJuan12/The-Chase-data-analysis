@@ -27,7 +27,7 @@ The dataset contains data on 100 episodes of The Chase. The data is stored withi
 
 ### Example record from final_chase_df
 
-| chaser              | contestant          | current_total | episode | event           | season | target | time_left        |
+| chaser              | contestant          | current_total | episode | event           | season | target | time_left (seconds)       |
 |---------------------|---------------------|---------------|---------|-----------------|--------|--------|------------------|
 | the dark destroyer  | the dark destroyer  | 11            | 131     | correct chaser  | 12     | 16     | 4.571048974990845 |
 
@@ -104,7 +104,18 @@ p (incorrect) = 0.38
 p (correct|previous correct) = 0.56  
 p (correct|previous incorrect) = 0.66  
 
-Running a chi square test gives the p value 0.000012, an incredibly small value showing that there is definetly a relationship. This means we can reject the Ha in favour of Ho and we can confidently say that the result of the previous answer does have an effect on the probability of getting the next question correct. It seems counter intuitive that a correct answer is more likely if the previous answer was incorrect. A possible explanation for this could be that they purposely alternate between difficult and easy questions. This could be answered by testing the same questions on others to see if the same pattern emmerges.
+Running a chi square test gives the p value 0.000012, an incredibly small value showing that there is definetly a relationship. This means we can reject the Ha in favour of Ho and we can confidently say that the result of the previous answer does have an effect on the probability of getting the next question correct. It seems counter intuitive that a correct answer is more likely if the previous answer was incorrect. A possible explanation for this could be that they purposely alternate between difficult and easy questions. If I had more time, I could answer this could be answered by testing the same questions on others to see if the same pattern emmerges.
+
+## Momentum on a larger scale
+
+The chasers and the host often comment on a teams course over the final chase. They say things like "the wheels came off in the second minute" or "they got some rythm going". I wanted to find out if teams typically answers questions correct evenly throughout the entire 2 minutes or if for example they start off correctly answering many questions to begin with and then slow down later. To answer this, I split the number of correct answers into 3 bins, the first 0-40 seconds, the next 40-80 seconds and the final 80-120 seconds. The raw counts are as follows.
+
+| Time Bin (seconds) | Correct Answers |
+|-------------------|----------------:|
+| 0–40              | 471             |
+| 40–80             | 415             |
+| 80–120            | 478             |
+
 
 
 
