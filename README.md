@@ -24,7 +24,7 @@ How do cashbuilders and number of contestants in the final chase impact likeliho
 
 ## Collecting the data
 
-<img width="610" height="816" alt="chase data collection image" src="https://github.com/user-attachments/assets/0a5c3047-0a43-4a25-886d-1061ef50c5de" />
+<img width="310" height="316" alt="chase data collection image" src="https://github.com/user-attachments/assets/0a5c3047-0a43-4a25-886d-1061ef50c5de" />
 <div style="margin-bottom: 20px;"></div>
 
 <img width="742" height="208" alt="final chase data image" src="https://github.com/user-attachments/assets/09426430-367c-40c7-8f69-9231e4cb7c95" />
@@ -72,6 +72,11 @@ From these results it's clear that age has no effect on cash builder as there ar
 Does momentum have an effect on teams in the final chase? For example do teams have hot streaks where they answer many questions in a row and then go cold.
 To answer this question we will examine if the probability of getting the next question correct is different depending on if the previous answer was correct or incorrect.
 
+Ho: The result of the previous answer has no effect on the probability of getting the next question correct, p(correct|previous incorrect) = p(correct|previous correct)  
+
+Ha: The result of the previous answer does have an effect on the probability of getting the next question correct, p(correct|previous incorrect) ≠ p(correct|previous correct)
+
+
 | Previous Answer | Current Correct | Current Incorrect |
 |-----------------|----------------:|------------------:|
 | Incorrect         | 763             | 286               |
@@ -84,4 +89,5 @@ p (incorrect) = 0.38
 p (correct|previous correct) = 0.56
 p (correct|previous incorrect) = 0.66
 
-Running a chi square test gives the p value 0.000012, an incredibly small value showing that there is definetly a relationship.
+Running a chi square test gives the p value 0.000012, an incredibly small value showing that there is definetly a relationship. This means we can reject the Ha in favour of Ho and we can confidently say that the result of the previous answer does have an effect on the probability of getting the next question correct. It seems counter intuitive that a correct answer is more likely if the previous answer was incorrect. A possible explanation for this could be that they purposely alternate between difficult and easy questions. This could be answered by testing the same questions on others to see if 
+
