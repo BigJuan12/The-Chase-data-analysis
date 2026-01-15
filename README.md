@@ -8,12 +8,18 @@ The Chase is a Brittish quiz show where 4 contestants work together to beat a ch
 
 
 ## Questions
-Some of the questions I want to answer with this analysis:
-Does gender and age influence the likelihood of a contestant taking the various offers. For example are male and younger contestants more likely to risk it and take the high offer.
-Does gender and age influence the ammount of money a contestant is expected to accumulate in their cash builder. For example, older contestants may do better as they have lived longer and gained more knowledge.
-Are contestants effected by momentum. For example does a previous correct answer increase the chances that a contestant will get the next one correct.
-Do teams answer questions evenly in the final chase. For example do teams typically perform better and then go cold.
-Create a model to predict target based on contestants who made it through and their cash builders.
+Some of the questions I want to answer with this analysis:  
+
+Does gender and age influence the likelihood of a contestant taking the various offers. For example are male and younger contestants more likely to risk it and take the high offer.  
+
+Does gender and age influence the ammount of money a contestant is expected to accumulate in their cash builder. For example, older contestants may do better as they have lived longer and gained more knowledge.  
+
+Are contestants effected by momentum. For example does a previous correct answer increase the chances that a contestant will get the next one correct.  
+
+Do teams answer questions evenly in the final chase. For example do teams typically perform well initially and then go cold.  
+
+Create a model to predict target based on contestants who made it through and their cash builders.  
+
 How do cashbuilders and number of contestants in the final chase impact likelihood of pushing the chaser back.
 
 ## Collecting the data
@@ -61,3 +67,21 @@ It may be assumed that older contestants would perform better in the cash builde
 
 From these results it's clear that age has no effect on cash builder as there are good and bad contestants of all ages.
 
+## Effect of momentum on contestants
+
+Does momentum have an effect on teams in the final chase? For example do teams have hot streaks where they answer many questions in a row and then go cold.
+To answer this question we will examine if the probability of getting the next question correct is different depending on if the previous answer was correct or incorrect.
+
+| Previous Answer | Current Correct | Current Incorrect |
+|-----------------|----------------:|------------------:|
+| Incorrect         | 763             | 286               |
+| Correct       | 543             | 601               |
+
+The raw counts show that there is a difference in the chances of the team getting an answer correct depending on the previous answer however the relationship is in the other direction that expected. It seems that the team is more likely to get the next question correct if the previous question was incorrect than if it was correct.
+
+p (correct) = 0.62
+p (incorrect) = 0.38
+p (correct|previous correct) = 0.56
+p (correct|previous incorrect) = 0.66
+
+Running a chi square test gives the p value 0.000012, an incredibly small value showing that there is definetly a relationship.
