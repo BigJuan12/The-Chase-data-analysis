@@ -122,6 +122,9 @@ The chasers and the host often comment on a teams course over the final chase. T
 There are many factors that influence the target the team will set in the final Chase. Initially I used the features, max cash builder, min cash builder, average cash builder, and number of contestants in final to predict targets. This wasn't particularly effective as the model had a mean average error of 2.83 steps. Part of the reason for the poor performance is the limited data available (only 100 episodes) as well as decision tree models like random forest tending to come up with complex relationships to fit the training data which isn't always reflective of the real relationship. Removing the features min cash builder and max cash builder resulted in slightly better performance with a mean absolute error of 2.26 steps. Still not perfect but a decent improvement. 
 
 <img width="587" height="429" alt="Feature importance" src="https://github.com/user-attachments/assets/de042b65-1309-4493-b2e5-7cb0c1108eaa" />
+
+The feature importance graph shows that the model relies more heavily on average cash builder than on the number of contestants who made it to the Final Chase when making its predictions.
+
 <table>
   <tr>
     <td>
@@ -133,6 +136,5 @@ There are many factors that influence the target the team will set in the final 
   </tr>
 </table>
 
-
-
+he scatter plots demonstrate a generally positive relationship between the model’s predicted target and both average cash builder and number of contestants. There is noticeably greater variation in predictions across different values of num_made_it, which is consistent with this feature having lower predictive importance compared to average cash builder.
 
