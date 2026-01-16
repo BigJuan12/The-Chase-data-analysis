@@ -104,7 +104,7 @@ p (incorrect) = 0.38
 p (correct|previous correct) = 0.56  
 p (correct|previous incorrect) = 0.66  
 
-Running a chi square test gives the p value 0.000012, an incredibly small value showing that there is definetly a relationship. This means we can reject the Ha in favour of Ho and we can confidently say that the result of the previous answer does have an effect on the probability of getting the next question correct. It seems counter intuitive that a correct answer is more likely if the previous answer was incorrect. A possible explanation for this could be that they purposely alternate between difficult and easy questions. If I had more time, this could be answered by testing the same questions on others to see if the same pattern emmerges.
+Running a chi square test gives the p value 0.000012, an incredibly small value showing that there is definetly a relationship. This means we can reject Ho in favour of Ha and we can confidently say that the result of the previous answer does have an effect on the probability of getting the next question correct. It seems counter intuitive that a correct answer is more likely if the previous answer was incorrect. A possible explanation for this could be that they purposely alternate between difficult and easy questions. If I had more time, this could be answered by testing the same questions on others to see if the same pattern emmerges.
 
 ## Momentum on a larger scale
 
@@ -120,3 +120,10 @@ The chasers and the host often comment on a teams course over the final chase. T
 ## Random forest model to predict target
 
 There are many factors that influence the target the team will set in the final Chase. Initially I used the features, max cash builder, min cash builder, average cash builder, and number of contestants in final to predict targets. This wasn't particularly effective as the model had a mean average error of 2.83 steps. Part of the reason for the poor performance is the limited data available (only 100 episodes) as well as decision tree models like random forest tending to come up with complex relationships to fit the training data which isn't always reflective of the real relationship. Removing the features min cash builder and max cash builder resulted in slightly better performance with a mean absolute error of 2.26 steps. Still not perfect but a decent improvement. 
+
+<img width="587" height="429" alt="Feature importance" src="https://github.com/user-attachments/assets/de042b65-1309-4493-b2e5-7cb0c1108eaa" />
+<img width="564" height="451" alt="Predicted vs avg cash builder" src="https://github.com/user-attachments/assets/1ceb1404-1227-4084-a05a-5c3062c6f293" />
+<img width="566" height="462" alt="Predicted vs num made it" src="https://github.com/user-attachments/assets/2ef10216-e4c8-4b7e-8284-3fc82cd0795a" />
+
+
+
