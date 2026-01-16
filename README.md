@@ -122,8 +122,17 @@ The chasers and the host often comment on a teams course over the final chase. T
 There are many factors that influence the target the team will set in the final Chase. Initially I used the features, max cash builder, min cash builder, average cash builder, and number of contestants in final to predict targets. This wasn't particularly effective as the model had a mean average error of 2.83 steps. Part of the reason for the poor performance is the limited data available (only 100 episodes) as well as decision tree models like random forest tending to come up with complex relationships to fit the training data which isn't always reflective of the real relationship. Removing the features min cash builder and max cash builder resulted in slightly better performance with a mean absolute error of 2.26 steps. Still not perfect but a decent improvement. 
 
 <img width="587" height="429" alt="Feature importance" src="https://github.com/user-attachments/assets/de042b65-1309-4493-b2e5-7cb0c1108eaa" />
-<img width="564" height="451" alt="Predicted vs avg cash builder" src="https://github.com/user-attachments/assets/1ceb1404-1227-4084-a05a-5c3062c6f293" /> <img width="566" height="462" alt="Predicted vs num made it" src="https://github.com/user-attachments/assets/2ef10216-e4c8-4b7e-8284-3fc82cd0795a" />
-<img width="566" height="462" alt="Predicted vs num made it" src="https://github.com/user-attachments/assets/2ef10216-e4c8-4b7e-8284-3fc82cd0795a" />
+<table>
+  <tr>
+    <td>
+      <img width="564" height="451" alt="Predicted vs avg cash builder" src="https://github.com/user-attachments/assets/1ceb1404-1227-4084-a05a-5c3062c6f293" />
+    </td>
+    <td>
+      <img width="566" height="462" alt="Predicted vs num made it" src="https://github.com/user-attachments/assets/2ef10216-e4c8-4b7e-8284-3fc82cd0795a" />
+    </td>
+  </tr>
+</table>
+
 
 
 
