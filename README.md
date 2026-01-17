@@ -116,6 +116,7 @@ The chasers and the host often comment on a teams course over the final chase. T
 | 40–80             | 415             |
 | 80–120            | 478             |
 
+It appears that teams seem to do well at the start and end but not as well in the middle 40 seconds. Running a chi square test gives the p value of 0.26, not enough evidence to say that there is a difference.
 
 ## Random forest model to predict target
 
@@ -137,4 +138,17 @@ The feature importance graph shows that the model relies more heavily on average
 </table>
 
 he scatter plots demonstrate a generally positive relationship between the model’s predicted target and both average cash builder and number of contestants. There is noticeably greater variation in predictions across different values of num_made_it, which is consistent with this feature having lower predictive importance compared to average cash builder.
+
+
+### Testing model on theoretical teams
+
+To properly evaluate how the model predicts its target, I tested the model on theoretical values. 
+
+| avg_cash_builder | num_made_it | predicted target |
+| ---------------: | ----------: | ---------------: |
+|             5000 |           1 |        17.345048 |
+|             3000 |           2 |        17.535405 |
+|             2000 |           4 |        18.267452 |
+
+The table above illustrates how the model responds to different combinations of team strength and team size. A team with one above-average player (average cash builder of 5,000) is predicted to set a slightly lower target than a team with two moderately below-average players (average cash builder of 3,000). Meanwhile, a team of four weaker players (average cash builder of 2,000) is predicted to set the highest target of the three. This suggests that, according to the model, the number of contestants in the Final Chase can sometimes outweigh individual cash builder performance when determining the target.
 
