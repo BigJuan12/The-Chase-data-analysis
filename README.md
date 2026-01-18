@@ -129,7 +129,41 @@ Working out whether to risk it for the high offer or play it safe and go with th
 | cash builder | 0.000174    |
 
 
-In human terms, this means that for every step up in offer (low-middle-high), the chances of a contestant making it to the final chase decreases by 54%. The cash builder coefficient looks incredibly low because it's measured in pounds whereas the cash builders go up in 1000 pounds per correct answer. This means that for every 1000 pound increase to the cash builder, a contestants chance of making it to the final chase increases by 16.5%. Tests resulted in the model producing an accuracy of 0.666 and an AUC of 0.648. This is slightly better than if the model had guessed True for every contestant in which it would have gotten an accuracy of 0.595 (the proportion of contestants who made it through to final chase). 
+In human terms, this means that for every step up in offer (low-middle-high), the models prediction of weather a contestant will make it to the final chase decreases by 45%. The cash builder coefficient looks incredibly low because it's measured in pounds whereas the cash builders go up in 1000 pounds per correct answer. This means that for every 1000 pound increase to the cash builder, the models prediction increases by 18.98% (this includes compounding from every pound increase). Interestingly, age proved to be a valuable feature as the model predicted a 2.08% increase for every year increase in age. Originaly, I was suspicious and thought this could be due to age confounding with offer taken, meaning that older contestants are more likely to make it through not because of their age but because they are more likely to take the lower offer. After further analysis however, I was more certain that this wasn't the case as older contestants were actually associated with taking the higher offer rather than the lower offer.
+
+| offer taken | average age |
+| ----------- | ----------- |
+| high        | 46.53       |
+| low         | 42.30       |
+| middle      | 42.10       |
+
+
+Looking at the average age of contestants who made it to the final chase also proved that age was a valid predictor in itself. This could be due to older contestants having better intuition about their abilities so they know which offers they can taken and comfortably get home.
+
+| made it | average age |
+| ------- | ----------- |
+| False   | 39.41       |
+| True    | 44.83       |
+
+
+After testing, the model produced an accuracy of 0.717 and an AUC of 0.733. This is a decent improvement than if the model had guessed True for every contestant in which it would have gotten an accuracy of 0.595 (the proportion of contestants who made it through to final chase). 
+
+### Testing with theoretical contestants
+
+To get a closer look at how the model was making it's predictions, I tested some theoretical contestants on it.  
+Offer taken:
+1 = low  
+2 = middle  
+3 = high  
+
+| cash builder | offer taken | age | predicted probs |
+| ------------ | ----------- | --- | --------------- |
+| 2000         | 2           | 30  | 0.378400        |
+| 4000         | 3           | 60  | 0.467742        |
+| 6000         | 1           | 50  | 0.769758        |
+
+We can see that in the first contestant scenario, the contestant only gets 2000 in the cash builder, their age is 30 and they take the middle offer. The model predicts their chance of making it to the final chase at 37.8% The second contestant gets 4000 but is 60 years old and takes the high offer. The model predicts 0.46% indicating that although they took the high offer which considerably decreases their chances, their high cash builder and older age makes them more likely of making it through.
+The third contestant is 50 years old, gets 6000 in the cash builder and is 50 years old showing how an above average cash builder and taking the lower offer considerably increases a contestants chance of making it to the final chase.
 
 ## Random forest model to predict target
 
