@@ -7,7 +7,7 @@ The Chase is a Brittish quiz show where 4 contestants work together to beat a ch
 
 
 
-## Questions
+## Questions 
 
 Does gender and age influence the likelihood of a contestant taking the various offers. For example are male and younger contestants more likely to risk it and take the high offer.  
 
