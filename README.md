@@ -120,7 +120,7 @@ It appears that teams seem to do well at the start and end but not as well in th
 
 ## Logistic regression to predict whether a player will make it through to final chase
 
-Working out whether to risk it for the high offer or play it safe and go with the lower offer is a dilema that all contestants on the Chase face. Predicting the probability of making it home with each offer is often what the contestants think about when deciding which offer to take. To model this, I used a logistic regression with the features offer taken, age, and cash builder. I thought about using the chaser as a feature as well but I decided I didn't have enough data for this to be accurate as each chaser would roughly have 15 episodes of data each. I also concluded that all chasers are roughly similar in skill which would mean they would have little difference on a contestants chance of making it to the final chase. The model produced the following coefficients.
+Working out whether to risk it for the high offer or play it safe and go with the lower offer is a dilema that all contestants on the Chase face. Predicting the probability of making it home with each offer is often what the contestants think about when deciding which offer to take. To model this, I used logistic regression with the features offer taken, age, and cash builder. I chose logistic regression because the features are likely independent and it assumes a linear relationship between the features and the odds it produces. I thought about using the chaser as a feature as well but I decided I didn't have enough data for this to be accurate as each chaser would roughly have 15 episodes of data each. I also concluded that all chasers are roughly similar in skill which would mean they would have little difference on a contestants chance of making it to the final chase. The model produced the following coefficients.
 
 | Feature      | Coefficient |
 | ------------ | ----------- |
@@ -129,11 +129,47 @@ Working out whether to risk it for the high offer or play it safe and go with th
 | cash builder | 0.000174    |
 
 
-In human terms, this means that for every step up in offer (low-middle-high), the chances of a contestant making it to the final chase decreases by 54%. The cash builder coefficient looks incredibly low because it's measured in pounds whereas the cash builders go up in 1000 pounds per correct answer. This means that for every 1000 pound increase to the cash builder, a contestants chance of making it to the final chase increases by 16.5%. Tests resulted in the model producing an accuracy of 0.666 and an AUC of 0.648. This is slightly better than if the model had guessed True for every contestant in which it would have gotten an accuracy of 0.595 (the proportion of contestants who made it through to final chase). 
+In human terms, this means that for every step up in offer (low-middle-high), the models prediction of weather a contestant will make it to the final chase decreases by 45%. The cash builder coefficient looks incredibly low because it's measured in pounds whereas the cash builders go up in 1000 pounds per correct answer. This means that for every 1000 pound increase to the cash builder, the models prediction increases by 18.98% (this includes compounding from every pound increase). Interestingly, age proved to be a valuable feature as the model predicted a 2.08% increase for every year increase in age. Originaly, I was suspicious and thought this could be due to age confounding with offer taken, meaning that older contestants are more likely to make it through not because of their age but because they are more likely to take the lower offer. After further analysis however, I was more certain that this wasn't the case as older contestants were actually associated with taking the higher offer rather than the lower offer.
+
+| offer taken | average age |
+| ----------- | ----------- |
+| high        | 46.53       |
+| low         | 42.30       |
+| middle      | 42.10       |
+
+
+Looking at the average age of contestants who made it to the Final Chase also suggested that age is a meaningful predictor in its own right. This could be because older contestants have better intuition about their own abilities, allowing them to make more informed decisions about which offers they can realistically take and still make it home. Additionally, older contestants may perform better in the head-to-head round than younger contestants, which would also increase their chances of reaching the Final Chase. Although earlier in my analysis I found that age had little effect on Cash Builder performance, this does not necessarily mean it has no impact on head-to-head performance. Older contestants may be better suited to this stage because they can take more time to reason through questions, and the multiple-choice format provides more opportunity to work out the correct answer compared to the fast recall required in the Cash Builder round.
+
+
+| made it | average age |
+| ------- | ----------- |
+| False   | 39.41       |
+| True    | 44.83       |
+
+
+After testing, the model produced an accuracy of 0.717 and an AUC of 0.733. This is a decent improvement than if the model had guessed True for every contestant in which it would have gotten an accuracy of 0.595 (the proportion of contestants who made it through to final chase). 
+
+### Testing with theoretical contestants
+
+To get a closer look at how the model was making it's predictions, I tested some theoretical contestants on it.  
+Offer taken:  
+1 = low  
+2 = middle  
+3 = high  
+
+| cash builder | offer taken | age | predicted probs |
+| ------------ | ----------- | --- | --------------- |
+| 2000         | 2           | 30  | 0.378400        |
+| 4000         | 3           | 60  | 0.467742        |
+| 6000         | 1           | 50  | 0.769758        |
+
+We can see that in the first contestant scenario, the contestant only gets 2000 in the cash builder, their age is 30 and they take the middle offer. The model predicts their chance of making it to the final chase at 37.8% The second contestant gets 4000 but is 60 years old and takes the high offer. The model predicts 46.7% indicating that although they took the high offer which considerably decreases their chances, their high cash builder and older age makes them more likely of making it through.
+The third contestant is 50 years old, gets 6000 in the cash builder and is 50 years old showing how an above average cash builder and taking the lower offer considerably increases a contestants chance of making it to the final chase.
 
 ## Random forest model to predict target
 
-There are many factors that influence the target the team will set in the final Chase. Initially I used the features, max cash builder, min cash builder, average cash builder, and number of contestants in final to predict targets. This wasn't particularly effective as the model had a mean average error of 2.83 steps. Part of the reason for the poor performance is the limited data available (only 100 episodes) as well as decision tree models like random forest tending to come up with complex relationships to fit the training data which isn't always reflective of the real relationship. Removing the features min cash builder and max cash builder resulted in slightly better performance with a mean absolute error of 2.26 steps. Still not perfect but a decent improvement. 
+There are many factors that influence the target the team will set in the final Chase which contribute in different ways. I chose to use a random forest model rather than a linear model as the random forest will be able to learn complex non-linear relationships between the features. A linear model on the other hand wouldn't be able to model the data accurately as features such as number of contestants won't necessarily have a linear relationship to target. For example, the increase from 1-2 contestants may contribute more than the increase from 3-4 contestants.  
+Initially I used the features, max cash builder, min cash builder, average cash builder, and number of contestants in final to predict targets. This wasn't particularly effective as the model had a mean average error of 2.83 steps. Part of the reason for the poor performance was the limited data available (only 100 episodes) as well as decision tree models like random forest tending to come up with complex relationships to fit the training data which isn't always reflective of the real relationship. Removing the features min cash builder and max cash builder resulted in slightly better performance with a mean absolute error of 2.26 steps. Still not perfect, but a decent improvement. 
 
 <img width="587" height="429" alt="Feature importance" src="https://github.com/user-attachments/assets/de042b65-1309-4493-b2e5-7cb0c1108eaa" />
 
@@ -165,6 +201,13 @@ To properly evaluate how the model predicts its target, I tested the model on th
 
 The table shows how the model trades off individual strength against team size. A team with one relatively strong player (average cash builder of 6,000) is predicted to set a moderate target of 16.66. In contrast, a team with two very weak players (average cash builder of 1,000) is predicted to set a much lower target of 13.79, suggesting that the model views “two very poor contestants” as worse than “one good one.” Meanwhile, a team of four weak players (average cash builder of 2,000) is predicted to set the highest target (18.27), indicating that the model sometimes places more weight on the number of contestants reaching the Final Chase than on their individual cash builder performance. This highlights both the importance of team size in the model and some unintuitive behavior likely driven by noise in the data and the flexibility of the random forest.
 
+## Gradient boosting to predict probability of catching target
+
+The chasers often like to pick favourites before trying to catch the team. Typically, a target of around 19 puts the team in what is called the fun-zone, where both the chaser and the team have similar chances of winning. To predict the chances of the chaser catching the team, I used a gradient boosting model. I chose this model as I have already done a logistic regression and random forest model already.
+
+## Finding which offer leads to maximum expected value
+
+Expected value is a gambling concept which is the ammount you would get if you repeated a bet many times. 
 
 ## Limitations
 
