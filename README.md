@@ -43,7 +43,7 @@ The contestant_data dataset contains data on each contestant within an episode i
 
 ## Collecting the data
 
-The process of collecting the data was extensive. There was no existing dataset that had the data I needed so I had to manually enter the data. Setting up a button system with contestants and answers enabled me to speed up the process. Using google firebase, I was able to automatically create a record from each click.
+The process of collecting the data was extensive. There was no existing dataset that had the data I needed so I had to manually enter the data. Setting up a button system with contestants and answers enabled me to speed up the process. Using google firebase, I was able to automatically create a record from each click. I chose 100 episodes as my sample size as this is a large enough number for me to gain valuable insights and be fairly confident in the valadity of the data. I could have collected more, however I decided 100 episodes was the best value for time and gathering data on any more episodes would give diminishing returns.
 
 <img width="310" height="416" alt="chase data collection image" src="https://github.com/user-attachments/assets/0a5c3047-0a43-4a25-886d-1061ef50c5de" />
 
@@ -118,6 +118,19 @@ The chasers and the host often comment on a teams course over the final chase. T
 
 It appears that teams seem to do well at the start and end but not as well in the middle 40 seconds. Running a chi square test gives the p value of 0.26, not enough evidence to say that there is a difference.
 
+## Logistic regression to predict whether a player will make it through to final chase
+
+Working out whether to risk it for the high offer or play it safe and go with the lower offer is a dilema that all contestants on the Chase face. Predicting the probability of making it home with each offer is often what the contestants think about when deciding which offer to take. To model this, I used a logistic regression with the features offer taken, age, and cash builder. I thought about using the chaser as a feature as well but I decided I didn't have enough data for this to be accurate as each chaser would roughly have 15 episodes of data each. I also concluded that all chasers are roughly similar in skill which would mean they would have little difference on a contestants chance of making it to the final chase. The model produced the following coefficients.
+
+| Feature      | Coefficient |
+| ------------ | ----------- |
+| offer taken  | -0.597002   |
+| age          | 0.020550    |
+| cash builder | 0.000174    |
+
+
+In human terms, this means that for every step up in offer (low-middle-high), the chances of a contestant making it to the final chase decreases by 54%. The cash builder coefficient looks incredibly low because it's measured in pounds whereas the cash builders go up in 1000 pounds per correct answer. This means that for every 1000 pound increase to the cash builder, a contestants chance of making it to the final chase increases by 16.5%. Tests resulted in the model producing an accuracy of 0.666 and an AUC of 0.648. This is slightly better than if the model had guessed True for every contestant in which it would have gotten an accuracy of 0.595 (the proportion of contestants who made it through to final chase). 
+
 ## Random forest model to predict target
 
 There are many factors that influence the target the team will set in the final Chase. Initially I used the features, max cash builder, min cash builder, average cash builder, and number of contestants in final to predict targets. This wasn't particularly effective as the model had a mean average error of 2.83 steps. Part of the reason for the poor performance is the limited data available (only 100 episodes) as well as decision tree models like random forest tending to come up with complex relationships to fit the training data which isn't always reflective of the real relationship. Removing the features min cash builder and max cash builder resulted in slightly better performance with a mean absolute error of 2.26 steps. Still not perfect but a decent improvement. 
@@ -137,7 +150,7 @@ The feature importance graph shows that the model relies more heavily on average
   </tr>
 </table>
 
-he scatter plots demonstrate a generally positive relationship between the model’s predicted target and both average cash builder and number of contestants. There is noticeably greater variation in predictions across different values of num_made_it, which is consistent with this feature having lower predictive importance compared to average cash builder.
+The scatter plots demonstrate a generally positive relationship between the model’s predicted target and both average cash builder and number of contestants. There is noticeably greater variation in predictions across different values of num_made_it, which is consistent with this feature having lower predictive importance compared to average cash builder.
 
 
 ### Testing model on theoretical teams
@@ -146,9 +159,17 @@ To properly evaluate how the model predicts its target, I tested the model on th
 
 | avg_cash_builder | num_made_it | predicted target |
 | ---------------: | ----------: | ---------------: |
-|             5000 |           1 |        17.345048 |
-|             3000 |           2 |        17.535405 |
+|             6000 |           1 |        16.657750 |
+|             1000 |           2 |        13.787071 |
 |             2000 |           4 |        18.267452 |
 
-The table above illustrates how the model responds to different combinations of team strength and team size. A team with one above-average player (average cash builder of 5,000) is predicted to set a slightly lower target than a team with two moderately below-average players (average cash builder of 3,000). Meanwhile, a team of four weaker players (average cash builder of 2,000) is predicted to set the highest target of the three. This suggests that, according to the model, the number of contestants in the Final Chase can sometimes outweigh individual cash builder performance when determining the target.
+The table shows how the model trades off individual strength against team size. A team with one relatively strong player (average cash builder of 6,000) is predicted to set a moderate target of 16.66. In contrast, a team with two very weak players (average cash builder of 1,000) is predicted to set a much lower target of 13.79, suggesting that the model views “two very poor contestants” as worse than “one good one.” Meanwhile, a team of four weak players (average cash builder of 2,000) is predicted to set the highest target (18.27), indicating that the model sometimes places more weight on the number of contestants reaching the Final Chase than on their individual cash builder performance. This highlights both the importance of team size in the model and some unintuitive behavior likely driven by noise in the data and the flexibility of the random forest.
+
+
+## Limitations
+
+Although the analysis gives a general overview of trends and patterns, there are a few limitations that could have skewed results.
+The first is the relatively small dataset of 100 chase episodes. This increases the chances that my results could be due to random variation rather than actual relationships. Particularly for my random forest model to predict targets, the small dataset could contribute to the model finding complex relationships where there is none.  
+Another limitation is the assumption that question difficulty stays the same from episode to episode. Because the data comes from multiple seasons that were years apart, question difficulty may not have stayed the same in that time and this could be skewing results for the momentum analysis and the target predictions.
+The third limitation is that the data was collected manually which could lead to inputting incorrect data. 
 
