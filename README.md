@@ -203,7 +203,7 @@ The table shows how the model trades off individual strength against team size. 
 
 ## Gradient boosting to predict probability of catching target
 
-The chasers often like to pick favourites before trying to catch the team. Typically, a target of around 19 puts the team in what is called the fun-zone, where both the chaser and the team have similar chances of winning. To predict the chances of the chaser catching the team, I used a gradient boosting model. I chose this model as I have already done a logistic regression and random forest model already.
+The chasers often like to pick favourites before trying to catch the team. Typically, a target of around 19 puts the team in what is called the fun-zone, where both the chaser and the team have similar chances of winning. To predict the chances of the chaser catching the team, I used a gradient boosting model. I chose this model as I have already done a logistic regression and random forest model already. From the random forest model previously, we saw that the target was highly correlated with the number of contestants in the final and the average cash builder. Because of this, it is necessary to control for this correlation to avoid cross contaminating. For example, the model may associate more contestants in the final with being less likely to get caught however this could just be due to teams with more contestants setting higher targets
 
 ## Finding which offer leads to maximum expected value
 
