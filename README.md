@@ -201,9 +201,43 @@ To properly evaluate how the model predicts its target, I tested the model on th
 
 The table shows how the model trades off individual strength against team size. A team with one relatively strong player (average cash builder of 6,000) is predicted to set a moderate target of 16.66. In contrast, a team with two very weak players (average cash builder of 1,000) is predicted to set a much lower target of 13.79, suggesting that the model views “two very poor contestants” as worse than “one good one.” Meanwhile, a team of four weak players (average cash builder of 2,000) is predicted to set the highest target (18.27), indicating that the model sometimes places more weight on the number of contestants reaching the Final Chase than on their individual cash builder performance. This highlights both the importance of team size in the model and some unintuitive behavior likely driven by noise in the data and the flexibility of the random forest.
 
-## Gradient boosting to predict probability of catching target
+## Predicting the probability of catching target
 
-The chasers often like to pick favourites before trying to catch the team. Typically, a target of around 19 puts the team in what is called the fun-zone, where both the chaser and the team have similar chances of winning. To predict the chances of the chaser catching the team, I used a gradient boosting model. I chose this model as I have already done a logistic regression and random forest model already. From the random forest model previously, we saw that the target was highly correlated with the number of contestants in the final and the average cash builder. Because of this, it is necessary to control for this correlation to avoid cross contaminating. For example, the model may associate more contestants in the final with being less likely to get caught however this could just be due to teams with more contestants setting higher targets
+The chasers often like to pick favourites before trying to catch the team. Typically, a target of around 19 puts the team in what is called the fun-zone, where both the chaser and the team have similar chances of winning. As I noted in the overview, when the chaser gets a question incorrect, the team are able to push the chaser back one step if they can correctly answer the question. Pushbacks are a vital part of winning the final chase and often decide games.  
+
+To predict the likelihood of the chaser catching the team, I initially used a logistic regression model, with the features target, number of contestants and average cash builder. From the random forest model I used to predict the target, we saw that the number of contestants and average cash builder were heavily correlated to target. This means for example, that more contestants in the final may be associated to being less likely to get caught, however, this could be due to the fact that teams with more contestants set higher targets which in turn effects the chances of the chaser catching the team. Using a logistic regression model already controls for confounding between these variables, however the coefficients are difficult to interpret because of the correlation between these variables. Because of this, the coefficient on `num_made_it` tells us (the effect of extra players while holding target fixed), which can be difficult to interpret.
+
+To make the model easier to understand and reduce multicollinearity, I first modeled the relationship between `target` and each feature (`num_made_it` and `avg_cash_builder`) and computed the residuals. This would tell me how each team differed from what would be expected based on the target they set. For example, a team that sets a target of 16, may have a predicted number of contestants of 2. If the actual number of contestants is 3, then the residual becomes -1 as this is the difference between the predicted and actual value. Essentially this becomes a measure of team strength and gives me information on how how good the team is relative to the target they set. By using the residuals, I am able to get a clearer and more interpretable view of the effect these features have on whether the chaser will catch the team or not.
+
+### Gam model to predict number of contestants from target
+
+To find the residuals of the number of contestants, I first needed to model number of contestants from target. To predict the number of contestants from target, I used a gam model allowing me to plot a curved line. I thought about just using a linear model however I didn't want to assume linearity. For example the effect of going from 1-2 contestants in the final chase could be smaller than the effect of 2-3. This is because when there is only a single contestant, the contestant doesn't need to use the buzzer and wait for their name to be called which is the case with 2 or more contestants and uses valuable time on the clock.
+The model had an average MAE of 0.71, considerably better than just predicting the average which would give an MAE of 0.85. I also tested a simple linear relationship and the MAE was essentially the same showing that the linear model explained the data just as well. I then calculated the residuals from the difference between the predicted number of contestants and the actual number of contestants.
+
+<img width="694" height="460" alt="target vs num contestants" src="https://github.com/user-attachments/assets/deda8e4d-ecd4-4bf8-8371-049a33bdbd18" />
+
+### Linear model to predict average cash builder from target
+
+I did the exact same thing as with the previous model to predict number of contestants but this time to predict the average cash builder from the target. I used a linear model here instead of a GAM model as I assume that there is a linear relationship between target and average cash builder. The model produced an MAE of 903.06. Again I calculated the residuals from using the difference between the predicted average cash builder and the actual average cash builder.
+
+<img width="713" height="464" alt="target vs avg cash builder " src="https://github.com/user-attachments/assets/455ba40f-94e3-449f-9910-26fd5dd95343" />
+
+### Logistic Regression on predicting the likelihood of chaser catching the team
+
+Using the residualized features (number of contestants residuals and average cash builder residuals) alongside the target, I trained a logistic regression model to predict the probability that the chaser would catch the team. The model achieved an accuracy of 0.666, which is the same as a the baseline accuracy of a model that always predicts a chaser win. This does not necessarily mean the model is bad as it shows the fact that the chaser wins around two-thirds of the time, making accuracy a bad metric to evaluate my model on.
+
+A better metric is AUC, with the model achieving an AUC of 0.7475, showing that it is effectively distinguishing between relatively heavy favourites and weak favourites. This means that although the model often predicts a chaser win, the model still assigns lower probabilities of the chaser winning to stronger teams and higher probabilities to weaker ones, correctly ranking outcomes most of the time.
+
+The following table shows the coefficients.
+
+| Variable                     | Coefficient |
+|------------------------------|-------------|
+| avg_cash_builder_residual    |  0.00000932 |
+| num_made_it_residual         | 0.26313471 |
+| target                       | -0.52734067 |
+
+
+This shows that target was the strongest predictor of whether the chaser would catch the team or not with every extra step added to the target leading to a 43% less chance of the chaser catching the team. The number of contestants who made it to the final chase was also a good predictor. For two teams with the same target, the team which has more players is predicted to be more likely to get caught. In other words, for every +1 player added to the residual, the chaser is 30% more likely to catch the team. This could be due to the quality of players being higher when the number of contestants residual is higher as they were able to set a higher target than what a typical team of that size would set. The average cash builder residual was essentially a non factor in predicting whether the chaser would catch the team or not as the coefficient is near 0.
 
 ## Finding which offer leads to maximum expected value
 
