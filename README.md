@@ -181,10 +181,12 @@ There are many factors that influence the target the team will set in the final 
   </tr>
 </table>
 
+The first plot shows a positive relationship between the number of contestants and the predicted target. The coefficient was 2.27 meaning for every 1 player increase, the predicted target goes up by 2.27 steps, showing a strong correlation.
+The next plot however, is more difficult to make clear inferences. The plot shows a very weak positive trend with the predicted values being very spread. This shows that average cash builder is less of a determining factor than the number of players when it comes to predicting the target. The coefficient tells a slightly different story as it is 0.000857. This means for every 1000 pound increase in average cash builder, the predicted target increases by 0.86 steps, a substantial increase. 
+
 ## Random forest model to predict target
 
-There are many factors that influence the target the team will set in the final Chase which contribute in different ways. I chose to use a random forest model rather than a linear model as the random forest will be able to learn complex non-linear relationships between the features. A linear model on the other hand wouldn't be able to model the data accurately as features such as number of contestants won't necessarily have a linear relationship to target. For example, the increase from 1-2 contestants may contribute more than the increase from 3-4 contestants.  
-Initially I used the features, max cash builder, min cash builder, average cash builder, and number of contestants in final to predict targets. This wasn't particularly effective as the model had a mean average error of 2.83 steps. Part of the reason for the poor performance was the limited data available (only 100 episodes) as well as decision tree models like random forest tending to come up with complex relationships to fit the training data which isn't always reflective of the real relationship. Removing the features min cash builder and max cash builder resulted in slightly better performance with a mean absolute error of 2.26 steps. Still not perfect, but a decent improvement. 
+Because there wasn't a clear relationship between the average cash builder and predicted target, I decided to run a random forest model to see if the model could come up with complex relationships within the data that the linear model might have overlooked. Initially I used the same features I used in the linear model, average cash builder, and number of contestants as well as 2 more features, max cash builder and min cash builder. This wasn't particularly effective as the model had a mean average error of 2.83 steps. Part of the reason for the poor performance was the limited data available (only 100 episodes) as well as decision tree models like random forest tending to come up with complex relationships to fit the training data which isn't always reflective of the real relationship. Removing the features min cash builder and max cash builder resulted in slightly better performance with a mean absolute error of 2.26 steps. A decent improvement, but still worse than the linear model.
 
 <img width="587" height="429" alt="Feature importance" src="https://github.com/user-attachments/assets/de042b65-1309-4493-b2e5-7cb0c1108eaa" />
 
@@ -206,7 +208,7 @@ The scatter plots demonstrate a generally positive relationship between the mode
 
 ### Testing model on theoretical teams
 
-To properly evaluate how the model predicts its target, I tested the model on theoretical values. 
+To properly evaluate how the model was predicting its target, I tested the model on theoretical values. 
 
 | avg_cash_builder | num_made_it | predicted target |
 | ---------------: | ----------: | ---------------: |
@@ -216,7 +218,9 @@ To properly evaluate how the model predicts its target, I tested the model on th
 
 The table shows how the model trades off individual strength against team size. A team with one relatively strong player (average cash builder of 6,000) is predicted to set a moderate target of 16.66. In contrast, a team with two very weak players (average cash builder of 1,000) is predicted to set a much lower target of 13.79, suggesting that the model views “two very poor contestants” as worse than “one good one.” Meanwhile, a team of four weak players (average cash builder of 2,000) is predicted to set the highest target (18.27), indicating that the model sometimes places more weight on the number of contestants reaching the Final Chase than on their individual cash builder performance. This highlights both the importance of team size in the model and some unintuitive behavior likely driven by noise in the data and the flexibility of the random forest.
 
-## Predicting the probability of catching target
+After comparing both the linear model and random forest model, it was clear that the linear model both performed better and was more interpretable. 
+
+## Predicting the probability of the chaser catching target
 
 The chasers often like to pick favourites before trying to catch the team. Typically, a target of around 19 puts the team in what is called the fun-zone, where both the chaser and the team have similar chances of winning. As I noted in the overview, when the chaser gets a question incorrect, the team are able to push the chaser back one step if they can correctly answer the question. Pushbacks are a vital part of winning the final chase and often decide games.  
 
@@ -233,7 +237,7 @@ The model had an average MAE of 0.71, considerably better than just predicting t
 
 ### Linear model to predict average cash builder from target
 
-I did the exact same thing as with the previous model to predict number of contestants but this time to predict the average cash builder from the target. I used a linear model here instead of a GAM model as I assume that there is a linear relationship between target and average cash builder. The model produced an MAE of 903.06. Again I calculated the residuals from using the difference between the predicted average cash builder and the actual average cash builder.
+I did the exact same thing as with the previous model to predict number of contestants but this time to predict the average cash builder from the target. I used a linear model here instead of a GAM model as I assume that there is a linear relationship between target and average cash builder. The model produced an MAE of 903.06. Again, I calculated the residuals from using the difference between the predicted average cash builder and the actual average cash builder.
 
 <img width="713" height="464" alt="target vs avg cash builder " src="https://github.com/user-attachments/assets/455ba40f-94e3-449f-9910-26fd5dd95343" />
 
@@ -252,11 +256,41 @@ The following table shows the coefficients.
 | target                       | -0.52734067 |
 
 
-This shows that target was the strongest predictor of whether the chaser would catch the team or not with every extra step added to the target leading to a 43% less chance of the chaser catching the team. The number of contestants who made it to the final chase was also a good predictor. For two teams with the same target, the team which has more players is predicted to be more likely to get caught. In other words, for every +1 player added to the residual, the chaser is 30% more likely to catch the team. This could be due to the quality of players being higher when the number of contestants residual is higher as they were able to set a higher target than what a typical team of that size would set. The average cash builder residual was essentially a non factor in predicting whether the chaser would catch the team or not as the coefficient is near 0.
+This shows that target was the strongest predictor of whether the chaser would catch the team or not with every extra step added to the target leading to a 43% less chance of the chaser catching the team. The number of contestants who made it to the final chase was also a good predictor. For two teams with the same target, the team which has more players is predicted to be more likely to get caught. In other words, for every +1 player added to the residual, the chaser is 30% more likely to catch the team. This could be due to the quality of players being higher when the number of contestants residual is lower as they were able to set a higher target than what a typical team of that size would set. The average cash builder residual was essentially a non factor in predicting whether the chaser would catch the team or not as the coefficient is near 0.
 
 ## Finding which offer leads to maximum expected value
 
-Expected value is a gambling concept which is the ammount you would get if you repeated a bet many times. 
+Expected value is a gambling concept which is the ammount you could expect to win on average if you repeated a bet multiple times. We can apply this on the Chase to find the optimal offer to choose in the head to head. As I explained earlier, each contestant is given 3 offers, high middle and low, the middle offer is decided by the amount the contestant acheived in their cash builder. By using the models I created earlier, we can work out which offer is best to take in a specific scenario purely from the perspective of maximizing expected value. 
+Consider this example, the current team looks like this.
+
+| avg_cash_builder | num_made_it | prize_fund |
+| ---------------- | ----------- | ---------- |
+| 4000             | 3           | 50000      |
+
+The fourth contestant is gets 5000 in their cash builder and their offers are as follows.
+
+| Offer type | Offer (£) |
+| ---------- | --------- |
+| Low        | -2000     |
+| Middle     | 6000      |
+| High       | 15000     |
+
+To find which offer the contestant should take, we need to first find the probability of the contestant making it home in all three cases using the model I made earlier.
+
+| Offer type | Probability of making it home |
+| ---------- | ----------------------------- |
+| Low        | 0.820                         |
+| Middle     | 0.664                         |
+| High       | 0.463                         |
+
+Then we need to find the chances of the team winning whether or not the player makes it home. This involves first calculating the predicted target with and without the contestant aswell as the average cash builder and number of contestants residuals.
+
+| Scenario                         | Probability team wins |
+| -------------------------------- | --------------------- |
+| Contestant makes it home         | 0.356                 |
+| Contestant does not make it home | 0.147                 |
+
+Using these probabilities, we can make a tree of the possible outcomes and how much money the team would win in each case.
 
 ## Limitations
 
