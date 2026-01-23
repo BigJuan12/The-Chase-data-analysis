@@ -261,13 +261,14 @@ This shows that target was the strongest predictor of whether the chaser would c
 ## Finding which offer leads to maximum expected value
 
 Expected value is a gambling concept which is the ammount you could expect to win on average if you repeated a bet multiple times. We can apply this on the Chase to find the optimal offer to choose in the head to head. As I explained earlier, each contestant is given 3 offers, high middle and low, the middle offer is decided by the amount the contestant acheived in their cash builder. By using the models I created earlier, we can work out which offer is best to take in a specific scenario purely from the perspective of maximizing expected value. 
-Consider this example, the current team looks like this.
+
+Consider this example, the current team looks like this.  
 
 | avg_cash_builder | num_made_it | prize_fund |
 | ---------------- | ----------- | ---------- |
 | 4000             | 3           | 50000      |
 
-The fourth contestant is gets 5000 in their cash builder and their offers are as follows.
+The fourth contestant gets 5000 in their cash builder and their offers are as follows.
 
 | Offer type | Offer (£) |
 | ---------- | --------- |
@@ -290,7 +291,7 @@ Then we need to find the chances of the team winning whether or not the player m
 | Contestant makes it home         | 0.356                 |
 | Contestant does not make it home | 0.147                 |
 
-Using these probabilities, we can make a tree of the possible outcomes and how much money the team would win in each case.
+Using these probabilities, we can make a tree of the possible outcomes and how much money the team could be expected to win in each case.
 
 ## Limitations
 
