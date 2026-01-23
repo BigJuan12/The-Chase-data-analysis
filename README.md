@@ -166,6 +166,21 @@ Offer taken:
 We can see that in the first contestant scenario, the contestant only gets 2000 in the cash builder, their age is 30 and they take the middle offer. The model predicts their chance of making it to the final chase at 37.8% The second contestant gets 4000 but is 60 years old and takes the high offer. The model predicts 46.7% indicating that although they took the high offer which considerably decreases their chances, their high cash builder and older age makes them more likely of making it through.
 The third contestant is 50 years old, gets 6000 in the cash builder and is 50 years old showing how an above average cash builder and taking the lower offer considerably increases a contestants chance of making it to the final chase.
 
+## Linear model to predict target
+
+There are many factors that influence the target the team will set in the final Chase which contribute in different ways. I started by training a simple linear regression with the features average cash builder and number of contestants. The linear model performed reasonably well with a mean absolute error of 1.94 steps away from the observed target. 
+
+<table>
+  <tr>
+    <td>
+      <img width="573" height="453" alt="target vs num contestants linear" src="https://github.com/user-attachments/assets/06a15760-0880-4640-8810-2c9543a972be" />
+    </td>
+    <td>
+      <img width="587" height="451" alt="target vs avg cash builder linear" src="https://github.com/user-attachments/assets/3b4814d4-55c2-47cf-a23d-1016f4d12ac6" />
+    </td>
+  </tr>
+</table>
+
 ## Random forest model to predict target
 
 There are many factors that influence the target the team will set in the final Chase which contribute in different ways. I chose to use a random forest model rather than a linear model as the random forest will be able to learn complex non-linear relationships between the features. A linear model on the other hand wouldn't be able to model the data accurately as features such as number of contestants won't necessarily have a linear relationship to target. For example, the increase from 1-2 contestants may contribute more than the increase from 3-4 contestants.  
