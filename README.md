@@ -293,6 +293,13 @@ Then we need to find the chances of the team winning whether or not the player m
 
 Using these probabilities, we can make a tree of the possible outcomes and how much money the team could be expected to win in each case.
 
+flowchart LR
+    Low -->|0.32| Make
+    Low -->|0.18| NoMake
+    Make -->|0.20| WinWith
+    NoMake -->|0.12| WinWithout
+
+
 ## Limitations
 
 Although the analysis gives a general overview of trends and patterns, there are a few limitations that could have skewed results.
