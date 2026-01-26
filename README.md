@@ -293,7 +293,7 @@ Then we need to find the chances of the team winning whether or not the player m
 
 Using these probabilities, we can make a tree of the possible outcomes and how much money the team could be expected to win in each case.
 
-<img width="912" height="592" alt="probability tree for ev the chase" src="https://github.com/user-attachments/assets/b054ab1a-fe3b-4cdd-b99b-8c5141defe5a" />
+<img width="914" height="592" alt="probability tree for ev the chase" src="https://github.com/user-attachments/assets/8afb149d-663a-4928-b666-6b5a7842dfa1" />
 
 Calculating the expected value for each offer simply involves multiplying the prize fund by the probability that the contestant gets through and then again by the probability the team wins whether or not the contestant got through.
 
