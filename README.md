@@ -108,7 +108,7 @@ Running a chi square test gives the p value 0.000012, an incredibly small value 
 
 ## Momentum on a larger scale
 
-The chasers and the host often comment on a teams course over the final chase. They say things like "the wheels came off in the second minute" or "they got some rythm going". I wanted to find out if teams typically answers questions correct evenly throughout the entire 2 minutes or if for example they start off correctly answering many questions to begin with and then slow down later. To answer this, I split the number of correct answers into 3 bins, the first 0-40 seconds, the next 40-80 seconds and the final 80-120 seconds. The raw counts are as follows.
+The chasers and the host often comment on a teams course over the final chase. They say things like "the wheels came off in the second minute" or "they got some rythm going". I wanted to find out if teams typically answers questions correct evenly throughout the entire 2 minutes or if for example, they start off correctly answering many questions to begin with and then slow down later. To answer this, I split the number of correct answers into 3 bins, the first 0-40 seconds, the next 40-80 seconds and the final 80-120 seconds. The raw counts are as follows.
 
 | Time Bin (seconds) | Correct Answers |
 |-------------------|----------------:|
@@ -117,6 +117,10 @@ The chasers and the host often comment on a teams course over the final chase. T
 | 80–120            | 478             |
 
 It appears that teams seem to do well at the start and end but not as well in the middle 40 seconds. Running a chi square test gives the p value of 0.26, not enough evidence to say that there is a difference.
+
+I wanted to see if there was much variation on an individual level. To do this I ran a G-test, the likelihood form of the chi-square test. I used this instead of the chi-square test because some of the counts for the time bins were very low and the chi-square tends be unreliable for low counts. 
+
+The p value was 0.58, signifying very weak evidence that there was a difference between teams performance over the time bins however not enough to reject the null hypothesis.
 
 ## Logistic regression to predict whether a player will make it through to final chase
 
@@ -298,9 +302,19 @@ Using these probabilities, we can make a tree of the possible outcomes and how m
 
 Calculating the expected value for each offer simply involves multiplying the prize fund by the probability that the contestant gets through and then again by the probability the team wins whether or not the contestant got through.
 
-EV low = 48000 *  0.82 * 0.356 + 50000 * 0.18 * 0.147 = £15335
-EV middle = 56000 * 0.664 * 0.356 + 50000 * 0.336 * 0.147 = £15707
-EV high = 
+EV low = 48000 *  0.82 * 0.356 + 50000 * 0.18 * 0.147 = £15335  
+
+EV middle = 56000 * 0.664 * 0.356 + 50000 * 0.336 * 0.147 = £15707  
+
+EV high = 85000 * 0.463 * 0.356 + 50000 * 0.537 * 0.147 = £17957  
+
+
+In this scenario, taking the high offer would lead to the highest expected value. 
+
+I wanted to see how often the contestants chose the offer that would lead to the highest expected value. I gathered data on 12 contestants from season 18 and season 14, who were all the last in their team to face the chaser. I used a small sample size as I only wanted to get an idea of the trends rather than analyze anything. 
+
+
+
 
 ## Limitations
 
