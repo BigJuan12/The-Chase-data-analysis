@@ -6,20 +6,24 @@
 The Chase is a Brittish quiz show where 4 contestants work together to beat a chaser, one of the worlds best quizzers. There are 3 phases. The first phase is the cash builder round where each contestant has a minute to answer rapid fire questions to accumulate as much money as possible. Each correct answer is worth 1000 pounds. The second phase is the head to head where the Chaser gives the contestant a high offer and a low offer as well as a middle offer which is decided by how much money they accumulated in the cash builder. The offer the contestant takes decides how many steps ahead of the chaser they will start (the high offer being 2 steps ahead, the middle being 3 and the low being 4). The chaser and the contestant will then answer the same multi choice questions. A correct answer will move the contestant or chaser forward by one step. The head to head ends with either the chaser catching the contestant or the contestant making it home before the chaser catches them. If the contestant gets home, the money from the offer they took is added to the team bank. The last round is the final chase where all the contestants who made it home will have 2 minutes to answer quickfire questions. Each correct answer gives the contestants another step towards their target. The contestants gain a head start based on how many made it home (4 contestants = 4 step head start, 2 = 2 step head start etc). Once the 2 minutes is up, the chaser has 2 minutes to try and reach their target however getting an incorrect answer gives the contestants a chance to push the chaser back 1 step if they can come up with the correct answer. If the chaser is unable to catch the team in time, the team leave with all the money in their bank or otherwise leave with nothing.
 
 
-
-## Questions
+## Goals
 
 Does gender and age influence the likelihood of a contestant taking the various offers. For example are male and younger contestants more likely to risk it and take the high offer.  
 
-Does gender and age influence the ammount of money a contestant is expected to accumulate in their cash builder. For example, older contestants may do better as they have lived longer and gained more knowledge.  
+Does gender and age influence the ammount of money a contestant is expected to accumulate in their cash builder. For example, do older contestantsdo better as they have lived longer and gained more knowledge.  
 
 Are contestants effected by momentum. For example does a previous correct answer increase the chances that a contestant will get the next one correct.  
 
 Do teams answer questions evenly in the final chase. For example do teams typically perform well initially and then go cold.  
 
-Create a model to predict target based on contestants who made it through and their cash builders.  
+Create a model to predict the likelihood of a contestant making it through to the final chase
 
-How do cashbuilders and number of contestants in the final chase impact likelihood of pushing the chaser back.
+Create a model to predict the target
+
+Create a model to predict the likelihood of the chaser catching the team
+
+Calculate the expected value of each offer to find which offer is the best to take
+
 
 ## Overview of the data
 
@@ -108,7 +112,7 @@ Running a chi square test gives the p value 0.000012, an incredibly small value 
 
 ## Momentum on a larger scale
 
-The chasers and the host often comment on a teams course over the final chase. They say things like "the wheels came off in the second minute" or "they got some rythm going". I wanted to find out if teams typically answers questions correct evenly throughout the entire 2 minutes or if for example they start off correctly answering many questions to begin with and then slow down later. To answer this, I split the number of correct answers into 3 bins, the first 0-40 seconds, the next 40-80 seconds and the final 80-120 seconds. The raw counts are as follows.
+The chasers and the host often comment on a teams course over the final chase. They say things like "the wheels came off in the second minute" or "they got some rythm going". I wanted to find out if teams typically answers questions correct evenly throughout the entire 2 minutes or if for example, they start off correctly answering many questions to begin with and then slow down later. To answer this, I split the number of correct answers into 3 bins, the first 0-40 seconds, the next 40-80 seconds and the final 80-120 seconds. The raw counts are as follows.
 
 | Time Bin (seconds) | Correct Answers |
 |-------------------|----------------:|
@@ -118,9 +122,13 @@ The chasers and the host often comment on a teams course over the final chase. T
 
 It appears that teams seem to do well at the start and end but not as well in the middle 40 seconds. Running a chi square test gives the p value of 0.26, not enough evidence to say that there is a difference.
 
+I wanted to see if there was a difference in how well individual teams did at different time periods. To do this I ran a G-test, the likelihood form of the chi-square test. I used this instead of the chi-square test because some of the counts for the time bins were very low and the chi-square tends be unreliable for low counts. 
+
+The p value was 0.058, signifying very weak evidence that there was a difference between teams performance over the time bins however not enough to reject the null hypothesis.
+
 ## Logistic regression to predict whether a player will make it through to final chase
 
-Working out whether to risk it for the high offer or play it safe and go with the lower offer is a dilema that all contestants on the Chase face. Predicting the probability of making it home with each offer is often what the contestants think about when deciding which offer to take. To model this, I used a logistic regression with the features offer taken, age, and cash builder. I thought about using the chaser as a feature as well but I decided I didn't have enough data for this to be accurate as each chaser would roughly have 15 episodes of data each. I also concluded that all chasers are roughly similar in skill which would mean they would have little difference on a contestants chance of making it to the final chase. The model produced the following coefficients.
+Working out whether to risk it for the high offer or play it safe and go with the lower offer is a dilema that all contestants on the Chase face. Predicting the probability of making it home with each offer is what the contestants have to keep in mind when deciding which offer to take. To model this, I used logistic regression with the features offer taken, age, and cash builder. I chose logistic regression because the features are likely independent and it assumes a linear relationship between the features and the odds it produces. I thought about using the chaser as a feature as well but I decided I didn't have enough data for this to be accurate as each chaser would roughly have 15 episodes of data each. I also concluded that all chasers are roughly similar in skill which would mean they would have little difference on a contestants chance of making it to the final chase. The model produced the following coefficients.
 
 | Feature      | Coefficient |
 | ------------ | ----------- |
@@ -138,7 +146,8 @@ In human terms, this means that for every step up in offer (low-middle-high), th
 | middle      | 42.10       |
 
 
-Looking at the average age of contestants who made it to the final chase also proved that age was a valid predictor in itself.
+Looking at the average age of contestants who made it to the Final Chase also suggested that age is a meaningful predictor in itself. This could be because older contestants have better intuition about their own abilities, allowing them to better judge which offers they can realistically take and still make it home. Aswel as this, older contestants may perform better in the head-to-head round than younger contestants, which would also increase their chances of reaching the Final Chase. Although earlier in my analysis I found that age had little effect on Cash Builder performance, this does not necessarily mean it has no impact on head-to-head performance. Older contestants may be better suited to this stage because they can take more time on each question, and the multi choice format provides more opportunity to work out the correct answer compared to having to quickly come up with the answer on their own in the Cash Builder round.
+
 
 | made it | average age |
 | ------- | ----------- |
@@ -151,7 +160,7 @@ After testing, the model produced an accuracy of 0.717 and an AUC of 0.733. This
 ### Testing with theoretical contestants
 
 To get a closer look at how the model was making it's predictions, I tested some theoretical contestants on it.  
-Offer taken:
+Offer taken:  
 1 = low  
 2 = middle  
 3 = high  
@@ -162,10 +171,30 @@ Offer taken:
 | 4000         | 3           | 60  | 0.467742        |
 | 6000         | 1           | 50  | 0.769758        |
 
+We can see that in the first contestant scenario, the contestant only gets 2000 in the cash builder, their age is 30 and they take the middle offer. The model predicts their chance of making it to the final chase at 37.8% The second contestant gets 4000 but is 60 years old and takes the high offer. The model predicts 46.7% indicating that although they took the high offer which considerably decreases their chances, their high cash builder and older age makes them more likely of making it through.
+The third contestant is 50 years old, gets 6000 in the cash builder and is 50 years old showing how an above average cash builder and taking the lower offer considerably increases a contestants chance of making it to the final chase.
+
+## Linear model to predict target
+
+There are many factors that influence the target the team will set in the final Chase which contribute in different ways. I started by training a simple linear regression with the features average cash builder and number of contestants. The linear model performed reasonably well with a mean absolute error of 1.94 steps away from the observed target. 
+
+<table>
+  <tr>
+    <td>
+      <img width="573" height="453" alt="target vs num contestants linear" src="https://github.com/user-attachments/assets/06a15760-0880-4640-8810-2c9543a972be" />
+    </td>
+    <td>
+      <img width="587" height="451" alt="target vs avg cash builder linear" src="https://github.com/user-attachments/assets/3b4814d4-55c2-47cf-a23d-1016f4d12ac6" />
+    </td>
+  </tr>
+</table>
+
+The first plot shows a positive relationship between the number of contestants and the predicted target. The coefficient was 2.27 meaning for every 1 player increase, the predicted target goes up by 2.27 steps, showing a strong correlation.
+The next plot however, is more difficult to make clear inferences. The plot shows a very weak positive trend with the predicted values being very spread. This shows that average cash builder is less of a determining factor than the number of players when it comes to predicting the target. The coefficient tells a slightly different story as it is 0.000857. This means for every 1000 pound increase in average cash builder, the predicted target increases by 0.86 steps, a substantial increase. 
 
 ## Random forest model to predict target
 
-There are many factors that influence the target the team will set in the final Chase. Initially I used the features, max cash builder, min cash builder, average cash builder, and number of contestants in final to predict targets. This wasn't particularly effective as the model had a mean average error of 2.83 steps. Part of the reason for the poor performance is the limited data available (only 100 episodes) as well as decision tree models like random forest tending to come up with complex relationships to fit the training data which isn't always reflective of the real relationship. Removing the features min cash builder and max cash builder resulted in slightly better performance with a mean absolute error of 2.26 steps. Still not perfect but a decent improvement. 
+Because there wasn't a clear relationship between the average cash builder and predicted target, I decided to run a random forest model to see if the model could come up with complex relationships within the data that the linear model might have overlooked. Initially I used the same features I used in the linear model, average cash builder, and number of contestants as well as 2 more features, max cash builder and min cash builder. This wasn't particularly effective as the model had a mean average error of 2.83 steps. Part of the reason for the poor performance was the limited data available (only 100 episodes) as well as decision tree models like random forest tending to come up with complex relationships to fit the training data which isn't always reflective of the real relationship. Removing the features min cash builder and max cash builder resulted in slightly better performance with a mean absolute error of 2.26 steps. A decent improvement, but still worse than the linear model.
 
 <img width="587" height="429" alt="Feature importance" src="https://github.com/user-attachments/assets/de042b65-1309-4493-b2e5-7cb0c1108eaa" />
 
@@ -187,7 +216,7 @@ The scatter plots demonstrate a generally positive relationship between the mode
 
 ### Testing model on theoretical teams
 
-To properly evaluate how the model predicts its target, I tested the model on theoretical values. 
+To properly evaluate how the model was predicting its target, I tested the model on theoretical values. 
 
 | avg_cash_builder | num_made_it | predicted target |
 | ---------------: | ----------: | ---------------: |
@@ -196,6 +225,121 @@ To properly evaluate how the model predicts its target, I tested the model on th
 |             2000 |           4 |        18.267452 |
 
 The table shows how the model trades off individual strength against team size. A team with one relatively strong player (average cash builder of 6,000) is predicted to set a moderate target of 16.66. In contrast, a team with two very weak players (average cash builder of 1,000) is predicted to set a much lower target of 13.79, suggesting that the model views “two very poor contestants” as worse than “one good one.” Meanwhile, a team of four weak players (average cash builder of 2,000) is predicted to set the highest target (18.27), indicating that the model sometimes places more weight on the number of contestants reaching the Final Chase than on their individual cash builder performance. This highlights both the importance of team size in the model and some unintuitive behavior likely driven by noise in the data and the flexibility of the random forest.
+
+After comparing both the linear model and random forest model, it was clear that the linear model both performed better and was more interpretable. 
+
+## Predicting the probability of the chaser catching target
+
+The chasers often like to pick favourites before trying to catch the team. Typically, a target of around 19 puts the team in what is called the fun-zone, where both the chaser and the team have similar chances of winning. As I noted in the overview, when the chaser gets a question incorrect, the team are able to push the chaser back one step if they can correctly answer the question. Pushbacks are a vital part of winning the final chase and often decide games.  
+
+To predict the likelihood of the chaser catching the team, I initially used a logistic regression model, with the features target, number of contestants and average cash builder. From the random forest model I used to predict the target, we saw that the number of contestants and average cash builder were heavily correlated to target. This means for example, that more contestants in the final may be associated to being less likely to get caught, however, this could be due to the fact that teams with more contestants set higher targets which in turn effects the chances of the chaser catching the team. Using a logistic regression model already controls for confounding between these variables, however the coefficients are difficult to interpret because of the correlation between these variables. Because of this, the coefficient on `num_made_it` tells us (the effect of extra players while holding target fixed), which can be difficult to interpret.
+
+To make the model easier to understand and reduce multicollinearity, I first modeled the relationship between `target` and each feature (`num_made_it` and `avg_cash_builder`) and computed the residuals. This would tell me how each team differed from what would be expected based on the target they set. For example, a team that sets a target of 16, may have a predicted number of contestants of 2. If the actual number of contestants is 3, then the residual becomes -1 as this is the difference between the predicted and actual value. Essentially this becomes a measure of team strength and gives me information on how how good the team is relative to the target they set. By using the residuals, I am able to get a clearer and more interpretable view of the effect these features have on whether the chaser will catch the team or not.
+
+### Gam model to predict number of contestants from target
+
+To find the residuals of the number of contestants, I first needed to model number of contestants from target. To predict the number of contestants from target, I used a gam model allowing me to plot a curved line. I thought about just using a linear model however I didn't want to assume linearity. For example the effect of going from 1-2 contestants in the final chase could be smaller than the effect of 2-3. This is because when there is only a single contestant, the contestant doesn't need to use the buzzer and wait for their name to be called which is the case with 2 or more contestants and uses valuable time on the clock.
+The model had an average MAE of 0.71, considerably better than just predicting the average which would give an MAE of 0.85. I also tested a simple linear relationship and the MAE was essentially the same showing that the linear model explained the data just as well. I then calculated the residuals from the difference between the predicted number of contestants and the actual number of contestants.
+
+<img width="694" height="460" alt="target vs num contestants" src="https://github.com/user-attachments/assets/deda8e4d-ecd4-4bf8-8371-049a33bdbd18" />
+
+### Linear model to predict average cash builder from target
+
+I did the exact same thing as with the previous model to predict number of contestants but this time to predict the average cash builder from the target. I used a linear model here instead of a GAM model as I assume that there is a linear relationship between target and average cash builder. The model produced an MAE of 903.06. Again, I calculated the residuals from using the difference between the predicted average cash builder and the actual average cash builder.
+
+<img width="713" height="464" alt="target vs avg cash builder " src="https://github.com/user-attachments/assets/455ba40f-94e3-449f-9910-26fd5dd95343" />
+
+### Logistic Regression on predicting the likelihood of chaser catching the team
+
+Using the residualized features (number of contestants residuals and average cash builder residuals) alongside the target, I trained a logistic regression model to predict the probability that the chaser would catch the team. The model achieved an accuracy of 0.666, which is the same as a the baseline accuracy of a model that always predicts a chaser win. This does not necessarily mean the model is bad as it shows the fact that the chaser wins around two-thirds of the time, making accuracy a bad metric to evaluate my model on.
+
+A better metric is AUC, with the model achieving an AUC of 0.7475, showing that it is effectively distinguishing between relatively heavy favourites and weak favourites. This means that although the model often predicts a chaser win, the model still assigns lower probabilities of the chaser winning to stronger teams and higher probabilities to weaker ones, correctly ranking outcomes most of the time.
+
+The following table shows the coefficients.
+
+| Variable                     | Coefficient |
+|------------------------------|-------------|
+| avg_cash_builder_residual    |  0.00000932 |
+| num_made_it_residual         | 0.26313471 |
+| target                       | -0.52734067 |
+
+
+This shows that target was the strongest predictor of whether the chaser would catch the team or not with every extra step added to the target leading to a 43% less chance of the chaser catching the team. The number of contestants who made it to the final chase was also a good predictor. For two teams with the same target, the team which has more players is predicted to be more likely to get caught. In other words, for every +1 player added to the residual, the chaser is 30% more likely to catch the team. This could be due to the quality of players being higher when the number of contestants residual is lower as they were able to set a higher target than what a typical team of that size would set. The average cash builder residual was essentially a non factor in predicting whether the chaser would catch the team or not as the coefficient is near 0.
+
+## Finding which offer leads to maximum expected value
+
+Expected value is a gambling concept which is the ammount you could expect to win on average if you repeated a bet multiple times. We can apply this on the Chase to find the optimal offer to choose in the head to head. As I explained earlier, each contestant is given 3 offers, high middle and low, the middle offer is decided by the amount the contestant acheived in their cash builder. By using the models I created earlier, we can work out which offer is best to take in a specific scenario purely from the perspective of maximizing expected value. 
+
+Consider this example, the current team looks like this.  
+
+| avg_cash_builder | num_made_it | prize_fund |
+| ---------------- | ----------- | ---------- |
+| 4000             | 3           | 50000      |
+
+The fourth contestant gets 5000 in their cash builder and their offers are as follows.
+
+| Offer type | Offer (£) |
+| ---------- | --------- |
+| Low        | -2000     |
+| Middle     | 6000      |
+| High       | 15000     |
+
+To find which offer the contestant should take, we need to first find the probability of the contestant making it home in all three cases using the model I made earlier.
+
+| Offer type | Probability of making it home |
+| ---------- | ----------------------------- |
+| Low        | 0.820                         |
+| Middle     | 0.664                         |
+| High       | 0.463                         |
+
+Then we need to find the chances of the team winning whether or not the player makes it home. This involves first calculating the predicted target with and without the contestant aswell as the average cash builder and number of contestants residuals.
+
+| Scenario                         | Probability team wins |
+| -------------------------------- | --------------------- |
+| Contestant makes it home         | 0.356                 |
+| Contestant does not make it home | 0.147                 |
+
+Using these probabilities, we can make a tree of the possible outcomes and how much money the team could be expected to win in each case.
+
+<img width="914" height="594" alt="probability tree for ev the chase" src="https://github.com/user-attachments/assets/87d1122a-f4c1-4b90-8197-77c0778cec6f" />
+
+
+Calculating the expected value for each offer simply involves multiplying the prize fund by the probability that the contestant gets through and then again by the probability the team wins whether or not the contestant got through.
+
+EV low = 48000 *  0.82 * 0.356 + 50000 * 0.18 * 0.147 = £15335  
+
+EV middle = 56000 * 0.664 * 0.356 + 50000 * 0.336 * 0.147 = £15707  
+
+EV high = 85000 * 0.463 * 0.356 + 50000 * 0.537 * 0.147 = £17957  
+
+
+In this scenario, taking the high offer would lead to the highest expected value. 
+
+I wanted to see how often the contestants chose the offer that would lead to the highest expected value. I gathered data on 12 contestants from season 18 and season 14, who were all the last in their team to face the chaser. I used a small sample size as I only wanted to get an idea of the trends rather than analyze anything. 
+
+| avg_cash_builder | num_made_it | prize_fund | ev low     | ev middle  | ev high     | offer taken | cash builder |
+|------------------|-------------|------------|------------|------------|-------------|-------------|--------------|
+| 4666 | 3 | 14000 | 3640.955620 | 4324.153185 | 10532.987546 | middle | 4000 |
+| 5500 | 2 | 11000 | 2984.221520 | 4845.722084 | 21599.768202 | middle | 6000 |
+| 6000 | 1 | 6000  | 1665.660262 | 3943.776032 | 13571.460870 | high   | 8000 |
+| 6000 | 3 | 18000 | 4799.398779 | 5473.955550 | 15128.119481 | middle | 5000 |
+| 6000 | 2 | 12000 | 3242.313683 | 4151.989907 | 17855.991941 | middle | 3000 |
+| 3500 | 2 | 7000  | 1727.720075 | 1956.054029 | 8588.768471  | middle | 2000 |
+| 3000 | 1 | 3000  | 1237.988247 | 2236.776692 | 12966.611096 | middle | 6000 |
+| 4666 | 3 | 14000 | 4020.488165 | 5683.411708 | 13496.928224 | middle | 5000 |
+| 5000 | 2 | 60000 | 13582.338016| 14897.599507| 17941.472313 | middle | 2000 |
+| 4000 | 2 | 5000  | 962.913878  | 1924.276413 | 8205.499098  | low    | 4000 |
+| 5000 | 1 | 5000  | 1612.679343 | 1626.319237 | 6555.773575  | high   | 3000 |
+| 8000 | 1 | 8000  | 2048.396136 | 4833.533688 | 16557.997640 | middle | 8000 |
+
+We can see that the high offer has the highest expected value in every case and by a large margin. The mean expected values for each offer are as follows.
+
+Low: 3460
+Middle: 4658
+High: 13583
+
+There was a small difference in the mean expected value between the low offer and the middle offer however the expected value for the high offer far exceeded the other offers. The mean expected value for the high offer was on average 2.9x higher than the expected value for the middle offer. Only 2 out of the 12 contestants picked the offer with the greatest expected value (the high offer) signifying that the contestants typically play it safe rather than going for the offer with the greatest upside on average.
+
 
 
 ## Limitations
