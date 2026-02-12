@@ -334,9 +334,12 @@ I wanted to see how often the contestants chose the offer that would lead to the
 
 We can see that the high offer has the highest expected value in every case and by a large margin. The mean expected values for each offer are as follows.
 
-Low: 3460
-Middle: 4658
-High: 13583
+Low: 3460  
+
+Middle: 4658  
+
+High: 13583  
+
 
 There was a small difference in the mean expected value between the low offer and the middle offer however the expected value for the high offer far exceeded the other offers. The mean expected value for the high offer was on average 2.9x higher than the expected value for the middle offer. Only 2 out of the 12 contestants picked the offer with the greatest expected value (the high offer) signifying that the contestants typically play it safe rather than going for the offer with the greatest upside on average.
 
