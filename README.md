@@ -6,20 +6,24 @@
 The Chase is a Brittish quiz show where 4 contestants work together to beat a chaser, one of the worlds best quizzers. There are 3 phases. The first phase is the cash builder round where each contestant has a minute to answer rapid fire questions to accumulate as much money as possible. Each correct answer is worth 1000 pounds. The second phase is the head to head where the Chaser gives the contestant a high offer and a low offer as well as a middle offer which is decided by how much money they accumulated in the cash builder. The offer the contestant takes decides how many steps ahead of the chaser they will start (the high offer being 2 steps ahead, the middle being 3 and the low being 4). The chaser and the contestant will then answer the same multi choice questions. A correct answer will move the contestant or chaser forward by one step. The head to head ends with either the chaser catching the contestant or the contestant making it home before the chaser catches them. If the contestant gets home, the money from the offer they took is added to the team bank. The last round is the final chase where all the contestants who made it home will have 2 minutes to answer quickfire questions. Each correct answer gives the contestants another step towards their target. The contestants gain a head start based on how many made it home (4 contestants = 4 step head start, 2 = 2 step head start etc). Once the 2 minutes is up, the chaser has 2 minutes to try and reach their target however getting an incorrect answer gives the contestants a chance to push the chaser back 1 step if they can come up with the correct answer. If the chaser is unable to catch the team in time, the team leave with all the money in their bank or otherwise leave with nothing.
 
 
-
-## Questions 
+## Goals
 
 Does gender and age influence the likelihood of a contestant taking the various offers. For example are male and younger contestants more likely to risk it and take the high offer.  
 
-Does gender and age influence the ammount of money a contestant is expected to accumulate in their cash builder. For example, older contestants may do better as they have lived longer and gained more knowledge.  
+Does gender and age influence the ammount of money a contestant is expected to accumulate in their cash builder. For example, do older contestantsdo better as they have lived longer and gained more knowledge.  
 
 Are contestants effected by momentum. For example does a previous correct answer increase the chances that a contestant will get the next one correct.  
 
 Do teams answer questions evenly in the final chase. For example do teams typically perform well initially and then go cold.  
 
-Create a model to predict target based on contestants who made it through and their cash builders.  
+Create a model to predict the likelihood of a contestant making it through to the final chase
 
-How do cashbuilders and number of contestants in the final chase impact likelihood of pushing the chaser back.
+Create a model to predict the target
+
+Create a model to predict the likelihood of the chaser catching the team
+
+Calculate the expected value of each offer to find which offer is the best to take
+
 
 ## Overview of the data
 
@@ -118,13 +122,13 @@ The chasers and the host often comment on a teams course over the final chase. T
 
 It appears that teams seem to do well at the start and end but not as well in the middle 40 seconds. Running a chi square test gives the p value of 0.26, not enough evidence to say that there is a difference.
 
-I wanted to see if there was much variation on an individual level. To do this I ran a G-test, the likelihood form of the chi-square test. I used this instead of the chi-square test because some of the counts for the time bins were very low and the chi-square tends be unreliable for low counts. 
+I wanted to see if there was a difference in how well individual teams did at different time periods. To do this I ran a G-test, the likelihood form of the chi-square test. I used this instead of the chi-square test because some of the counts for the time bins were very low and the chi-square tends be unreliable for low counts. 
 
-The p value was 0.58, signifying very weak evidence that there was a difference between teams performance over the time bins however not enough to reject the null hypothesis.
+The p value was 0.058, signifying very weak evidence that there was a difference between teams performance over the time bins however not enough to reject the null hypothesis.
 
 ## Logistic regression to predict whether a player will make it through to final chase
 
-Working out whether to risk it for the high offer or play it safe and go with the lower offer is a dilema that all contestants on the Chase face. Predicting the probability of making it home with each offer is often what the contestants think about when deciding which offer to take. To model this, I used logistic regression with the features offer taken, age, and cash builder. I chose logistic regression because the features are likely independent and it assumes a linear relationship between the features and the odds it produces. I thought about using the chaser as a feature as well but I decided I didn't have enough data for this to be accurate as each chaser would roughly have 15 episodes of data each. I also concluded that all chasers are roughly similar in skill which would mean they would have little difference on a contestants chance of making it to the final chase. The model produced the following coefficients.
+Working out whether to risk it for the high offer or play it safe and go with the lower offer is a dilema that all contestants on the Chase face. Predicting the probability of making it home with each offer is what the contestants have to keep in mind when deciding which offer to take. To model this, I used logistic regression with the features offer taken, age, and cash builder. I chose logistic regression because the features are likely independent and it assumes a linear relationship between the features and the odds it produces. I thought about using the chaser as a feature as well but I decided I didn't have enough data for this to be accurate as each chaser would roughly have 15 episodes of data each. I also concluded that all chasers are roughly similar in skill which would mean they would have little difference on a contestants chance of making it to the final chase. The model produced the following coefficients.
 
 | Feature      | Coefficient |
 | ------------ | ----------- |
@@ -142,7 +146,7 @@ In human terms, this means that for every step up in offer (low-middle-high), th
 | middle      | 42.10       |
 
 
-Looking at the average age of contestants who made it to the Final Chase also suggested that age is a meaningful predictor in its own right. This could be because older contestants have better intuition about their own abilities, allowing them to make more informed decisions about which offers they can realistically take and still make it home. Additionally, older contestants may perform better in the head-to-head round than younger contestants, which would also increase their chances of reaching the Final Chase. Although earlier in my analysis I found that age had little effect on Cash Builder performance, this does not necessarily mean it has no impact on head-to-head performance. Older contestants may be better suited to this stage because they can take more time to reason through questions, and the multiple-choice format provides more opportunity to work out the correct answer compared to the fast recall required in the Cash Builder round.
+Looking at the average age of contestants who made it to the Final Chase also suggested that age is a meaningful predictor in itself. This could be because older contestants have better intuition about their own abilities, allowing them to better judge which offers they can realistically take and still make it home. Aswel as this, older contestants may perform better in the head-to-head round than younger contestants, which would also increase their chances of reaching the Final Chase. Although earlier in my analysis I found that age had little effect on Cash Builder performance, this does not necessarily mean it has no impact on head-to-head performance. Older contestants may be better suited to this stage because they can take more time on each question, and the multi choice format provides more opportunity to work out the correct answer compared to having to quickly come up with the answer on their own in the Cash Builder round.
 
 
 | made it | average age |
@@ -313,6 +317,28 @@ In this scenario, taking the high offer would lead to the highest expected value
 
 I wanted to see how often the contestants chose the offer that would lead to the highest expected value. I gathered data on 12 contestants from season 18 and season 14, who were all the last in their team to face the chaser. I used a small sample size as I only wanted to get an idea of the trends rather than analyze anything. 
 
+| avg_cash_builder | num_made_it | prize_fund | ev low     | ev middle  | ev high     | offer taken | cash builder |
+|------------------|-------------|------------|------------|------------|-------------|-------------|--------------|
+| 4666 | 3 | 14000 | 3640.955620 | 4324.153185 | 10532.987546 | middle | 4000 |
+| 5500 | 2 | 11000 | 2984.221520 | 4845.722084 | 21599.768202 | middle | 6000 |
+| 6000 | 1 | 6000  | 1665.660262 | 3943.776032 | 13571.460870 | high   | 8000 |
+| 6000 | 3 | 18000 | 4799.398779 | 5473.955550 | 15128.119481 | middle | 5000 |
+| 6000 | 2 | 12000 | 3242.313683 | 4151.989907 | 17855.991941 | middle | 3000 |
+| 3500 | 2 | 7000  | 1727.720075 | 1956.054029 | 8588.768471  | middle | 2000 |
+| 3000 | 1 | 3000  | 1237.988247 | 2236.776692 | 12966.611096 | middle | 6000 |
+| 4666 | 3 | 14000 | 4020.488165 | 5683.411708 | 13496.928224 | middle | 5000 |
+| 5000 | 2 | 60000 | 13582.338016| 14897.599507| 17941.472313 | middle | 2000 |
+| 4000 | 2 | 5000  | 962.913878  | 1924.276413 | 8205.499098  | low    | 4000 |
+| 5000 | 1 | 5000  | 1612.679343 | 1626.319237 | 6555.773575  | high   | 3000 |
+| 8000 | 1 | 8000  | 2048.396136 | 4833.533688 | 16557.997640 | middle | 8000 |
+
+We can see that the high offer has the highest expected value in every case and by a large margin. The mean expected values for each offer are as follows.
+
+Low: 3460
+Middle: 4658
+High: 13583
+
+There was a small difference in the mean expected value between the low offer and the middle offer however the expected value for the high offer far exceeded the other offers. The mean expected value for the high offer was on average 2.9x higher than the expected value for the middle offer. Only 2 out of the 12 contestants picked the offer with the greatest expected value (the high offer) signifying that the contestants typically play it safe rather than going for the offer with the greatest upside on average.
 
 
 
