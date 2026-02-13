@@ -76,6 +76,10 @@ Originally I thought that males would be more inclined to take risks and therefo
 Both males and females overwhelmingly take the middle over the other offers with very few taking the lower offer.
 There is a slight difference in the lower offer with females taking this offer slightly more frequently than males.
 
+H0: gender effects offer taken  
+
+Ha: gender doesn't effect offer taken
+
 Running a chi-square test of independence found no statistically significant association between contestant gender and offer taken (p = 0.699). Although there are small differences in the proportions, these can be explained by random variation rather than gender.
 
 ## Does age effect cash builder
@@ -84,7 +88,22 @@ It may be assumed that older contestants would perform better in the cash builde
 
 <img width="891" height="535" alt="scatter plot of age : cashbuilder" src="https://github.com/user-attachments/assets/ed6d95d2-079a-45b2-a76e-10034eee7a0e" />
 
-From these results it's clear that age has no effect on cash builder as there are good and bad contestants of all ages.
+The scatter plot seems to be very spread with all age groups having high and low cash builders. To make the data more clear and try to identify trends that are hard to spot with the scatter plot, I split age groups into 3 bins and averaged the cash builders.
+
+| Age Group | Avg Cash Builder |
+|-----------|----------------:|
+| 20–40     | 4722.22         |
+| 40–60     | 5117.65         |
+| 60–80     | 4350.00         |
+
+Performance appears moderate in the 20–40 age group, increases in the 40–60 group, and then declines in the 60–80 group. To determine whether these differences are statistically significant, I ran a one-way ANOVA test. ANOVA is well-suited for this data because it compares variation between groups with variation within groups, and as we can see, there is substantial variability in cash builder scores across all age groups.
+
+H0: age has no effect on cash builder  
+
+Ha: age does have an effect on cash builder
+
+The ANOVA test gave me an F-statistic of 3.10, which measures the ratio of variation between age groups to variation within the groups. A higher F stat means that the group means are more spread out relative to the variability within each group. The p-value was 0.015. Since this is below 0.05 we can reject the null hypothesis that all age groups have the same average cash builder, suggesting that age does have a statistically significant effect on cash builder performance.
+
 
 ## Effect of momentum on contestants
 
