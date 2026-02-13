@@ -54,7 +54,7 @@ The process of collecting the data was extensive. There was no existing dataset 
 
 ## Interesting facts
 
-The average cash builder is $4803
+The average cash builder is £4803
   
 The average age of a contestant is 43 years old   
 
