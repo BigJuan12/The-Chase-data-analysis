@@ -283,7 +283,7 @@ The following table shows the coefficients.
 | target                       | -0.52734067 |
 
 
-This shows that target was the strongest predictor of whether the chaser would catch the team or not with every extra step added to the target leading to a 43% less chance of the chaser catching the team. The number of contestants who made it to the final chase was also a good predictor. For two teams with the same target, the team which has more players is predicted to be more likely to get caught. In other words, for every +1 player added to the residual, the chaser is 30% more likely to catch the team. This could be due to the quality of players being higher when the number of contestants residual is lower as they were able to set a higher target than what a typical team of that size would set. The average cash builder residual was essentially a non factor in predicting whether the chaser would catch the team or not as the coefficient is near 0.
+This shows that target was the strongest predictor of whether the chaser would catch the team or not with every extra step added to the target leading to a 43% less chance of the chaser catching the team. The number of contestants who made it to the final chase was also a good predictor. Holding the target constant, a one-player increase in the number of contestants residual is associated with a 30% increase in the odds of the chaser catching the team, suggesting that teams with more players than expected for their target tend to be weaker overall. This could be due to the quality of players being higher when the number of contestants residual is lower as they were able to set a higher target than what a typical team of that size would set. The average cash builder residual was essentially a non factor in predicting whether the chaser would catch the team or not as the coefficient is near 0.
 
 ## Finding which offer leads to maximum expected value
 
@@ -301,7 +301,7 @@ The fourth contestant gets 5000 in their cash builder and their offers are as fo
 | ---------- | --------- |
 | Low        | -2000     |
 | Middle     | 6000      |
-| High       | 15000     |
+| High       | 35000     |
 
 To find which offer the contestant should take, we need to first find the probability of the contestant making it home in all three cases using the model I made earlier.
 
