@@ -276,14 +276,16 @@ A better metric is AUC, with the model achieving an AUC of 0.7475, showing that 
 
 The following table shows the coefficients.
 
-| Variable                     | Coefficient |
-|------------------------------|-------------|
-| avg_cash_builder_residual    |  0.00000932 |
-| num_made_it_residual         | 0.26313471 |
-| target                       | -0.52734067 |
+| Feature                     | Mean Coefficient | Std Coefficient |
+|-----------------------------|------------------|-----------------|
+| avg_cash_builder_residual   | -0.000156        | 0.000104        |
+| num_made_it_residual        | 0.221098         | 0.119940        |
+| target                      | -0.443916        | 0.058791        |
 
 
 This shows that target was the strongest predictor of whether the chaser would catch the team or not with every extra step added to the target leading to a 43% less chance of the chaser catching the team. The number of contestants who made it to the final chase was also a good predictor. Holding the target constant, a one-player increase in the number of contestants residual is associated with a 30% increase in the odds of the chaser catching the team, suggesting that teams with more players than expected for their target tend to be weaker overall. This could be due to the quality of players being higher when the number of contestants residual is lower as they were able to set a higher target than what a typical team of that size would set. The average cash builder residual was essentially a non factor in predicting whether the chaser would catch the team or not as the coefficient is near 0.
+
+
 
 ## Finding which offer leads to maximum expected value
 
