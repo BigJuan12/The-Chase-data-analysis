@@ -274,7 +274,8 @@ Using the residualized features (number of contestants residuals and average cas
 
 A better metric is AUC, with the model achieving an AUC of 0.7475, showing that it is effectively distinguishing between relatively heavy favourites and weak favourites. This means that although the model often predicts a chaser win, the model still assigns lower probabilities of the chaser winning to stronger teams and higher probabilities to weaker ones, correctly ranking outcomes most of the time.
 
-The following table shows the coefficients.
+The following table shows the coefficients. I used 5 fold cross validation to check if these features were consistant predictors.
+
 
 | Feature                     | Mean Coefficient | Std Coefficient |
 |-----------------------------|------------------|-----------------|
@@ -282,9 +283,7 @@ The following table shows the coefficients.
 | num_made_it_residual        | 0.221098         | 0.119940        |
 | target                      | -0.443916        | 0.058791        |
 
-
-This shows that target was the strongest predictor of whether the chaser would catch the team or not with every extra step added to the target leading to a 43% less chance of the chaser catching the team. The number of contestants who made it to the final chase was also a good predictor. Holding the target constant, a one-player increase in the number of contestants residual is associated with a 30% increase in the odds of the chaser catching the team, suggesting that teams with more players than expected for their target tend to be weaker overall. This could be due to the quality of players being higher when the number of contestants residual is lower as they were able to set a higher target than what a typical team of that size would set. The average cash builder residual was essentially a non factor in predicting whether the chaser would catch the team or not as the coefficient is near 0.
-
+The target variable is the strongest predictor of whether the chaser catches the team. With a coefficient of −0.444, each extra step reduces the odds of the chaser winning by a about 0.642 (odds are multiplied by exp(−0.444) = 0.642). This coefficient is highly stable across different training splits (standard deviation = 0.059), suggesting that target is both strong and reliable. The number of contestants residual also looks to be a strong predictor on paper. For two teams with the same target, each additional player increases the odds of the chaser winning by about 1.12 (exp(0.113) = 1.12), but this effect is unstable (standard deviation = 0.12), meaning it may not generalize well to new data. The average cash builder residual has a near-zero coefficient (−0.000156), meaning it has virtually no effect on the chaser’s odds of winning.
 
 
 ## Finding which offer leads to maximum expected value
